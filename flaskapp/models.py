@@ -45,6 +45,16 @@ class Student(db.Model):
     def __repr__(self):
         return f"Student ('{self.name}, {self.student_id}')"
 
+class Admin(db.Model):
+    __tablename__ = "admin"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), nullable=False)
+    email = db.Column(db.String(80), nullable=False, unique=True)
+    password = db.Column(db.String(60), nullable=False)
+    
+    def __repr__(self):
+        return f"Admin ('{self.name}, {self.institution_id}')"
+
 
 class Teacher(db.Model):
     __tablename__ = "teacher"

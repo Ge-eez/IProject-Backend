@@ -27,10 +27,26 @@ def logout_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if ("logged_in" in session) and (session["logged_in"] == True):
-            return redirect(url_for("home"))
+            session.clear()
+            session["logged_in"] = False
         return f(*args, **kwargs)
     return decorated_function
 
+
+@app.route('/login_student', methods=['GET', 'POST'])
+@logout_required
+def login_student():
+    return "Hehe"
+
+@app.route('/login_teacher', methods=['GET', 'POST'])
+@logout_required
+def login_teacher():
+    return "Hehe"
+    
+@app.route('/login_company', methods=['GET', 'POST'])
+@logout_required
+def login_company():
+    return "Hehe"
 
 @app.route('/register_company', methods=['GET', 'POST'])
 @logout_required
