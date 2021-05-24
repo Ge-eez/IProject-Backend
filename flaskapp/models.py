@@ -1,11 +1,13 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date
-from sqlalchemy.orm import relationship
 from datetime import datetime
-from flaskapp import db
+from flaskapp import db, login_manager
 import csv
+from flask_login import UserMixin
 
+@login_manager.user_loader
+def load_user(user_id):
+    return Account.query.get(int(user_id))
 
-class Company(db.Model):
+class Company(db.Model, UserMixin):
     __tablename__ = "company"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
@@ -29,7 +31,7 @@ class Institution(db.Model):
     def __repr__(self):
         return f"Institution ('{self.name}')"
 
-class Student(db.Model):
+class Student(db.Model, UserMixin):
     __tablename__ = "student"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
@@ -55,8 +57,19 @@ class Admin(db.Model):
     def __repr__(self):
         return f"Admin ('{self.name}, {self.institution_id}')"
 
+class Account(db.Model):
+    __tablename__ = "account"
+    id = db.Column(db.Integer, primary_key=True)
+    role = db.Column(db.String(80), nullable=False)
+    role_id = db.Column(db.Integer, nullable=False)
+    email = db.Column(db.String(80), nullable=False, unique=True)
+    password = db.Column(db.String(60), nullable=False)
+    
+    def __repr__(self):
+        return f"Account ('{self.role}, {self.role_id}')"
 
-class Teacher(db.Model):
+
+class Teacher(db.Model, UserMixin):
     __tablename__ = "teacher"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
