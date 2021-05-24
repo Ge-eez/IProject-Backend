@@ -125,7 +125,7 @@ def login():
     if(current_user.is_authenticated):
         return jsonify({'message': "Already logged in"})
     data = request.form  
-    message = ""
+    result = {}
     try:
         if(data):
             user = Account.query.filter_by(email=data['email']).first()
@@ -137,16 +137,17 @@ def login():
                 if(user.role == 'teacher'):
                     active = Teacher.query.get(user.role_id)
                 login_user(active, remember=False)
-                message = "Logged in"
+                result['message'] = "Logged in"
+                result['user_id'] = current_user.id
             else:
-                message = "Invalid login"
+                result['message'] = "Invalid login"
         else:
             raise Exception("Form is missing")
     
     except Exception as e:
-        message = str(e)
+        result['message'] = str(e)
 
-    return jsonify({'message': message})
+    return jsonify(result)
 
 @bp.route('/logout', methods=['POST'])
 def logout():

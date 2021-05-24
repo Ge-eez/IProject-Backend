@@ -57,7 +57,7 @@ class Admin(db.Model):
     def __repr__(self):
         return f"Admin ('{self.name}, {self.institution_id}')"
 
-class Account(db.Model):
+class Account(db.Model, UserMixin):
     __tablename__ = "account"
     id = db.Column(db.Integer, primary_key=True)
     role = db.Column(db.String(80), nullable=False)
