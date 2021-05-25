@@ -2,10 +2,20 @@ from datetime import datetime
 from flaskapp import db, login_manager
 import csv
 from flask_login import UserMixin
+from flask import session
 
 @login_manager.user_loader
 def load_user(user_id):
-    return Account.query.get(int(user_id))
+    if session['account_type'] == 'admin':
+        return Admin.query.get(int(user_id))
+    elif session['account_type'] == 'company':
+        return Company.query.get(int(user_id))
+    elif session['account_type'] == 'student':
+        return Student.query.get(int(user_id))
+    elif session['account_type'] == 'teacher':
+        return Teacher.query.get(int(user_id))
+    else:
+        return Account.query.get(int(user_id))
 
 class Company(db.Model, UserMixin):
     __tablename__ = "company"
@@ -87,6 +97,10 @@ class Teacher(db.Model, UserMixin):
 class Project(db.Model):
 
     __tablename__ = "project"
+    __table_args__ = (
+        db.UniqueConstraint('title', 'company_id', name='unique_project'),
+    )
+    
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
     description = db.Column(db.String(180), nullable=False)
@@ -100,6 +114,9 @@ class Project(db.Model):
 
     def __repr__(self):
         return f"Project ('{self.title}, {self.company_id}')"
+    def as_dict(self):
+           return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
+
 
 class Work(db.Model):
     __tablename__ = "work"

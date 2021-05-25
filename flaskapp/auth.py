@@ -50,7 +50,7 @@ def signup_student():
             db.session.commit()   
 
             account = add_to_account(data['email'], hashed_password, "student", new_student.id)
-            if( not account):
+            if(not account):
                 raise Exception("Account not created")
 
             message = "Account created"
@@ -137,6 +137,7 @@ def login():
                 if(user.role == 'teacher'):
                     active = Teacher.query.get(user.role_id)
                 login_user(active, remember=False)
+                session["account_type"] = user.role
                 result['message'] = "Logged in"
                 result['user_id'] = current_user.id
             else:
@@ -152,5 +153,7 @@ def login():
 @bp.route('/logout', methods=['POST'])
 def logout():
     logout_user()
-    return jsonify({'message': "Logged out successfully"})
+    session["account_type"] = ''
+    return jsonify({'message': "Logged out successfully"})  
+
     

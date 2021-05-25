@@ -60,3 +60,7 @@ def login_teacher():
     return "Hehe"
     
 
+
+@app.errorhandler(400)
+def custom400(error):
+    response = jsonify({'error': error.description['message']})
