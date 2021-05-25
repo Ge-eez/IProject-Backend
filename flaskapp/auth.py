@@ -134,7 +134,7 @@ def login():
                     active = Company.query.get(user.role_id)
                 elif(user.role == 'student'):
                     active = Student.query.get(user.role_id)
-                if(user.role == 'teacher'):
+                elif(user.role == 'teacher'):
                     active = Teacher.query.get(user.role_id)
                 login_user(active, remember=False)
                 session["account_type"] = user.role

@@ -29,6 +29,9 @@ class Company(db.Model, UserMixin):
 
     def __repr__(self):
         return f"Company('{self.name}, {self.location}')"
+    def as_dict(self):
+           return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
+
 
 class Institution(db.Model):
     __tablename__ = "institution"
@@ -40,6 +43,9 @@ class Institution(db.Model):
 
     def __repr__(self):
         return f"Institution ('{self.name}')"
+    def as_dict(self):
+           return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
+
 
 class Student(db.Model, UserMixin):
     __tablename__ = "student"
@@ -56,6 +62,9 @@ class Student(db.Model, UserMixin):
     
     def __repr__(self):
         return f"Student ('{self.name}, {self.student_id}')"
+    def as_dict(self):
+           return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
+
 
 class Admin(db.Model):
     __tablename__ = "admin"
@@ -66,6 +75,9 @@ class Admin(db.Model):
     
     def __repr__(self):
         return f"Admin ('{self.name}, {self.institution_id}')"
+    def as_dict(self):
+           return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
+
 
 class Account(db.Model, UserMixin):
     __tablename__ = "account"
@@ -77,6 +89,9 @@ class Account(db.Model, UserMixin):
     
     def __repr__(self):
         return f"Account ('{self.role}, {self.role_id}')"
+    def as_dict(self):
+           return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
+
 
 
 class Teacher(db.Model, UserMixin):
@@ -92,6 +107,9 @@ class Teacher(db.Model, UserMixin):
     
     def __repr__(self):
         return f"Lecturer ('{self.name}, {self.institution_id}')"
+    def as_dict(self):
+           return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
+
 
 
 class Project(db.Model):
@@ -133,6 +151,10 @@ class Work(db.Model):
 
     def __repr__(self):
         return f"Project ('{self.student_id}, {self.project_id}')"
+    
+    def as_dict(self):
+            return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
+
 
 class Rating(db.Model):
     __tablename__ = "rating"
@@ -143,6 +165,10 @@ class Rating(db.Model):
     
     def __repr__(self):
         return f"Project ('{self.student_id}, {self.project_id}')"
+
+    def as_dict(self):
+           return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
+
 
 def main():
     global db

@@ -28,8 +28,8 @@ api = Api(app)
 
 from flaskapp import routes
 
-from flaskapp import auth
-from flaskapp import project
+from flaskapp import auth, project, user
 
 app.register_blueprint(auth.bp)
 api.add_resource(project.ProjectAPI, '/projects/', '/projects/<int:id>')
+api.add_resource(user.UserAPI, '/users/', '/users/<int:id>')

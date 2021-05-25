@@ -20,16 +20,22 @@ class ProjectAPI(Resource):
         if(current_user.is_authenticated):
             if(id):
                 project = Project.query.filter_by(id=id).first()
-                return project.as_dict()
+                if(project):
+                    return project.as_dict()
+                else:
+                    message = "Project not found"
             else:
                 projects = Project.query.all()
-                my_dict = dict() 
-                for index,value in enumerate(projects):
-                    my_dict[index] = value.as_dict()
-                return my_dict
+                if(projects):
+                    my_dict = dict() 
+                    for index,value in enumerate(projects):
+                        my_dict[index] = value.as_dict()
+                    return my_dict
+                else:
+                    message = "Projects not available"
 
         else:
-            message = "Login first"
+            message = "Access Denied"
         
         abort(400, {'message': message})
 
@@ -39,54 +45,51 @@ class ProjectAPI(Resource):
 
     def post(self):
         message = ""
-        if(current_user.is_authenticated):
-            if(session['account_type'] == 'company'):
-                data = request.form
-                if(data and data.get('title')  
-                    and data.get('description')  
-                    and data.get('price') 
-                    and data.get('deadline') 
-                    and data.get('technologies')):
-                    
-                    technologies = (data['technologies']).split(',')
-                    try:
-                        new_project = Project(title=data['title'], 
-                            description=data['description'], 
-                            price=data['price'], 
-                            deadline=data['deadline'],
-                            technologies=technologies,
-                            company_id=current_user.id) 
-                        db.session.add(new_project)  
-                        db.session.commit()  
-                        return "Project created"
-                    except:
-                        raise Exception("Project not created")
-                else: 
-                    message += "Form is missing"
+        if(current_user.is_authenticated and session['account_type'] == 'company'):
+            data = request.form
+            if(data and data.get('title')  
+                and data.get('description')  
+                and data.get('price') 
+                and data.get('deadline') 
+                and data.get('technologies')):
+                
+                technologies = (data['technologies']).split(',')
+                try:
+                    new_project = Project(title=data['title'], 
+                        description=data['description'], 
+                        price=data['price'], 
+                        deadline=data['deadline'],
+                        technologies=technologies,
+                        company_id=current_user.id) 
+                    db.session.add(new_project)  
+                    db.session.commit()  
+                    return "Project created"
+                except:
+                    message = "Project not created"
             else: 
-                message += "No access"
+                message += "Form is missing"
 
         else:
-            message = "Login first"
+            message = "Access Denied"
         
         abort(400, {'message': message})
 
     def delete(self, id):
         message = ""
-        if(current_user.is_authenticated):
-            if(session['account_type'] == 'company' or session['account_type'] == 'admin' ):
-                try:
-                    Project.query.filter_by(id=id).delete()
+        if(current_user.is_authenticated and (session['account_type'] == 'company' or session['account_type'] == 'admin' )):
+            try:
+                project = Project.query.filter_by(id=id).first()
+                if(project):
+                    project.delete()
                     db.session.commit()  
                     return "Project deleted"
-                except:
-                    raise Exception("Project not deleted")
-
-            else: 
-                message += "No access"
+                else:
+                    message = "Project not found"
+            except:
+                message = "Project not deleted"
 
         else:
-            message = "Login first"
+            message = "Access Denied"
         
         abort(400, {'message': message})
 
