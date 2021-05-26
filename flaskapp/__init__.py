@@ -28,9 +28,7 @@ api = Api(app)
 migrate = Migrate(app, db)
 
 
-from flaskapp import routes
-
-from flaskapp import auth, project, user, institution
+from flaskapp import routes, auth, project, user, institution, work
 
 app.register_blueprint(auth.bp)
 api.add_resource(project.ProjectAPI, '/projects/', '/projects/<int:id>')
