@@ -10,7 +10,7 @@ class UserAPI(Resource):
         
     def get(self, id=None):
         message = ""
-        if(current_user.is_authenticated):
+        if(logged_in(current_user)):
             if(id):
                 user = Account.query.filter_by(id=id).first()
                 if(user):
@@ -35,7 +35,7 @@ class UserAPI(Resource):
 
     def delete(self, id):
         message = ""
-        if(current_user.is_authenticated  and session['account_type'] == 'admin' ):
+        if(is_admin(current_user)):
             try:
                 acc = Account.query.filter_by(id=id)
                 account = acc.first()
@@ -64,7 +64,7 @@ class UserVerificationAPI(Resource):
         
     def put(self, id):
         message = ""
-        if(current_user.is_authenticated  and session['account_type'] == 'admin' ):
+        if(is_admin(current_user)):
             try:
                 account = Account.query.filter_by(id=id).first()
                 if(account):
@@ -94,7 +94,7 @@ class StudentAPI(Resource):
         
     def get(self, id=None):
         message = ""
-        if(current_user.is_authenticated):
+        if(logged_in(current_user)):
             if(id):
                 user = Student.query.filter_by(id=id).first()
                 if(user):
@@ -119,7 +119,7 @@ class StudentAPI(Resource):
 
         def delete(self, id):
             message = ""
-        if(current_user.is_authenticated  and session['account_type'] == 'admin' ):
+        if(is_admin(current_user)):
             try:
                 acc = Account.query.filter_by(id=id)
                 account = acc.first()
@@ -146,7 +146,7 @@ class StudentAPI(Resource):
     
         def delete(self, id):
             message = ""
-        if(current_user.is_authenticated):
+        if(logged_in(current_user)):
             try:
                 user = Student.query.filter_by(id=id)
                 acc = Account.query.filter_by(id=id)
@@ -174,7 +174,7 @@ class StudentAPI(Resource):
     
     def delete(self, id):
         message = ""
-        if(current_user.is_authenticated):
+        if(logged_in(current_user)):
             try:
                 user = Student.query.filter_by(id=id)
                 student = user.first()
@@ -199,7 +199,7 @@ class TeacherAPI(Resource):
         
     def get(self, id=None):
         message = ""
-        if(current_user.is_authenticated):
+        if(logged_in(current_user)):
             if(id):
                 user = Teacher.query.filter_by(id=id).first()
                 if(user):
@@ -224,7 +224,7 @@ class TeacherAPI(Resource):
 
     def delete(self, id):
         message = ""
-        if(current_user.is_authenticated):
+        if(logged_in(current_user)):
             try:
                 user = Teacher.query.filter_by(id=id)
                 teacher = user.first()
@@ -249,7 +249,7 @@ class CompanyAPI(Resource):
         
     def get(self, id=None):
         message = ""
-        if(current_user.is_authenticated):
+        if(logged_in(current_user)):
             if(id):
                 user = Company.query.filter_by(id=id).first()
                 if(user):
@@ -274,7 +274,7 @@ class CompanyAPI(Resource):
 
     def delete(self, id):
         message = ""
-        if(current_user.is_authenticated):
+        if(logged_in(current_user)):
             try:
                 user = Company.query.filter_by(id=id)
                 company = user.first()

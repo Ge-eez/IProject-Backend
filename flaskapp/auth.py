@@ -3,6 +3,7 @@ from flask import Blueprint, session, request, jsonify, abort
 from functools import wraps
 from flaskapp import db, bcrypt
 from flask_login import login_user, current_user, logout_user
+from flaskapp.routes import *
 
 from flaskapp.models import *
 
@@ -27,8 +28,8 @@ def add_to_account(email, hashed_password, role, role_id):
 
 @bp.route('/register_student', methods=['POST'])
 def signup_student():  
-    if(current_user.is_authenticated):
-        return jsonify({'message': "Already logged in"})
+    if(logged_in(current_user)):
+        abort(400, {'message': "Already logged in"})
     data = request.form  
     message = ""
     try:
@@ -57,8 +58,8 @@ def signup_student():
 
 @bp.route('/register_teacher', methods=['POST'])
 def signup_teacher():  
-    if(current_user.is_authenticated):
-        return jsonify({'message': "Already logged in"})
+    if(logged_in(current_user)):
+        abort(400, {'message': "Already logged in"})
     data = request.form  
     message = ""
     try:
@@ -85,8 +86,8 @@ def signup_teacher():
 
 @bp.route('/register_company', methods=['POST'])
 def signup_company():  
-    if(current_user.is_authenticated):
-        return jsonify({'message': "Already logged in"})
+    if(logged_in(current_user)):
+        abort(400, {'message': "Already logged in"})
     data = request.form  
     message = ""
     try:
@@ -113,8 +114,8 @@ def signup_company():
 
 @bp.route('/login', methods=['POST'])
 def login():
-    if(current_user.is_authenticated):
-        return jsonify({'message': "Already logged in"})
+    if(logged_in(current_user)):
+        abort(400, {'message': "Already logged in"})
     data = request.form  
     result = {}
     try:
