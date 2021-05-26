@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_restful import Api
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 
@@ -24,12 +25,18 @@ Session(app)
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 api = Api(app)
+migrate = Migrate(app, db)
 
 
 from flaskapp import routes
 
-from flaskapp import auth, project, user
+from flaskapp import auth, project, user, institution
 
 app.register_blueprint(auth.bp)
 api.add_resource(project.ProjectAPI, '/projects/', '/projects/<int:id>')
 api.add_resource(user.UserAPI, '/users/', '/users/<int:id>')
+api.add_resource(institution.InstitutionAPI, '/institutions/', '/institutions/<int:id>')
+api.add_resource(user.UserVerificationAPI, '/users/verify/<int:id>')
+api.add_resource(user.StudentAPI, '/students/', '/students/<int:id>')
+api.add_resource(user.TeacherAPI, '/teachers/', '/teachers/<int:id>')
+api.add_resource(user.CompanyAPI, '/companies/', '/companies/<int:id>')

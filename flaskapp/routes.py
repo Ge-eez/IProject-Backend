@@ -1,13 +1,7 @@
-import os
-from flask_bcrypt import Bcrypt
 from flask import Blueprint, session, render_template, url_for, flash, redirect, request, jsonify, abort
-from flask_session import Session
-from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
-from flaskapp import app, db, bcrypt
+from flaskapp import app, db
 
-from flask_jwt import JWT
-import jwt
 
 from flaskapp.models import *
 

@@ -24,7 +24,6 @@ class Company(db.Model, UserMixin):
     email = db.Column(db.String(80), nullable=False, unique=True)
     location = db.Column(db.String(80), nullable=False)
     verified = db.Column(db.Boolean, nullable=False, default=False)
-    password = db.Column(db.String(60), nullable=False)
     projects = db.relationship('Project', backref='project', lazy=True)
 
     def __repr__(self):
@@ -55,7 +54,6 @@ class Student(db.Model, UserMixin):
     batch = db.Column(db.Integer, nullable=False)
     verified = db.Column(db.Boolean, nullable=False, default=False)
     student_id = db.Column(db.String, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
     institution_id = db.Column(db.Integer, db.ForeignKey('institution.id'), nullable=False)
     
     works = db.relationship('Work', backref='developer', lazy=True)
@@ -100,7 +98,6 @@ class Teacher(db.Model, UserMixin):
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), nullable=False, unique=True)
     verified = db.Column(db.Boolean, nullable=False, default=False)
-    password = db.Column(db.String(60), nullable=False)
     institution_id = db.Column(db.Integer, db.ForeignKey('institution.id'), nullable=False)
 
     works = db.relationship('Work', backref='overviews', lazy=True)

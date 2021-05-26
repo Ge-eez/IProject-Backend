@@ -4,6 +4,7 @@ from flaskapp import db, api
 from flask_login import current_user
 from flask_restful import Resource
 
+
 from flaskapp.models import *
 
 class UserAPI(Resource):

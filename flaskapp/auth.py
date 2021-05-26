@@ -1,14 +1,8 @@
-import os
 from flask_bcrypt import Bcrypt
 from flask import Blueprint, session, request, jsonify, abort
-from flask_session import Session
-from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from flaskapp import db, bcrypt
 from flask_login import login_user, current_user, logout_user
-
-from flask_jwt import JWT
-import jwt
 
 from flaskapp.models import *
 
@@ -41,7 +35,6 @@ def signup_student():
         if(data):
             hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
             new_student = Student(name=data['name'], 
-                            password=hashed_password, 
                             email=data['email'], 
                             batch=data['batch'],
                             student_id=data['student_id'],
@@ -72,7 +65,6 @@ def signup_teacher():
         if(data):
             hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
             new_teacher = Teacher(name=data['name'], 
-                            password=hashed_password, 
                             email=data['email'], 
                             institution_id=data['institution_id']) 
             db.session.add(new_teacher)  
@@ -101,7 +93,6 @@ def signup_company():
         if(data):
             hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
             new_company = Company(name=data['name'], 
-                            password=hashed_password, 
                             location=data['location'],
                             email=data['email']) 
             db.session.add(new_company)  

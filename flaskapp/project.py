@@ -1,15 +1,9 @@
-import os
-from flask_bcrypt import Bcrypt
 from flask import Blueprint, session, request, jsonify, abort
-from flask_session import Session
-from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
-from flaskapp import db, bcrypt, api
-from flask_login import login_user, current_user
+from flaskapp import db, api
+from flask_login import current_user
 from flask_restful import Resource
 
-from flask_jwt import JWT
-import jwt
 
 from flaskapp.models import *
 
@@ -78,15 +72,15 @@ class ProjectAPI(Resource):
         message = ""
         if(current_user.is_authenticated and (session['account_type'] == 'company' or session['account_type'] == 'admin' )):
             try:
-                project = Project.query.filter_by(id=id).first()
+                project = Project.query.filter_by(id=id)
                 if(project):
                     project.delete()
                     db.session.commit()  
                     return "Project deleted"
                 else:
                     message = "Project not found"
-            except:
-                message = "Project not deleted"
+            except Exception as e:
+                message = "Project not deleted" + str(e)
 
         else:
             message = "Access Denied"
