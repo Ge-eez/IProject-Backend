@@ -83,7 +83,7 @@ class UserVerificationAPI(Resource):
                 else:
                     message = "Account not found"
             except Exception as e:
-                message = "Account not deleted "+ str(e)
+                message = "Account not verified "+ str(e)
 
         else:
             message = "Access Denied"
@@ -117,60 +117,6 @@ class StudentAPI(Resource):
         
         abort(400, {'message': message})
 
-        def delete(self, id):
-            message = ""
-        if(is_admin(current_user)):
-            try:
-                acc = Account.query.filter_by(id=id)
-                account = acc.first()
-                if(account):
-                    if(account.role == 'company'):
-                        user = Company.query.filter_by(id=account.role_id)
-                    elif(account.role == 'student'):
-                        user = Student.query.filter_by(id=account.role_id)
-                    elif(account.role == 'teacher'):
-                        user = Teacher.query.filter_by(id=account.role_id)
-                    user.delete()
-                    acc.delete()
-                    db.session.commit()  
-                    return "Account deleted"
-                else:
-                    message = "Account not found"
-            except Exception as e:
-                message = "Account not deleted "+ str(e)
-
-        else:
-            message = "Access Denied"
-        
-        abort(400, {'message': message})
-    
-        def delete(self, id):
-            message = ""
-        if(logged_in(current_user)):
-            try:
-                user = Student.query.filter_by(id=id)
-                acc = Account.query.filter_by(id=id)
-                account = acc.first()
-                if(account):
-                    if(account.role == 'company'):
-                        user = Company.query.filter_by(id=account.role_id)
-                    elif(account.role == 'student'):
-                        user = Student.query.filter_by(id=account.role_id)
-                    elif(account.role == 'teacher'):
-                        user = Teacher.query.filter_by(id=account.role_id)
-                    user.delete()
-                    acc.delete()
-                    db.session.commit()  
-                    return "Account deleted"
-                else:
-                    message = "Account not found"
-            except Exception as e:
-                message = "Account not deleted "+ str(e)
-
-        else:
-            message = "Access Denied"
-        
-        abort(400, {'message': message})
     
     def delete(self, id):
         message = ""

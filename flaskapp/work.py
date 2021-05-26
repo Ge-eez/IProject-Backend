@@ -15,29 +15,33 @@ class WorkAPI(Resource):
         if(logged_in(current_user)):
             if(id):
                 if(is_company(current_user)):
-                    project = Project.query.filter_by(id=id, company_id=current_user.id).first()
+                    work = Work.query.filter_by(id=id, company_id=current_user.id).first()
                 elif(is_student(current_user)):
-                    project = Project.query.filter_by(id=id, company_id=current_user.id).first()
+                    work = Work.query.filter_by(id=id, student_id=current_user.id).first()
                 elif(is_teacher(current_user)):
-                    project = Project.query.filter_by(id=id, company_id=current_user.id).first()
+                    work = Work.query.filter_by(id=id, teachers_id=current_user.id).first()
                 else:
-                    project = Project.query.filter_by(id=id).first()
-                if(project):
-                    return project.as_dict()
+                    work = Work.query.filter_by(id=id).first()
+                if(work):
+                    return work.as_dict()
                 else:
-                    message = "Project not found"
+                    message = "Work not found"
             else:
                 if(is_company(current_user)):
-                    project = Project.query.filter_by(company_id=current_user.id)
+                    works = Work.query.join(Project, Work.projects_id==Project.id).filter(Project.company_id==current_user.id)
+                elif(is_student(current_user)):
+                    works = Work.query.filter_by(student_id=current_user.id)
+                elif(is_teacher(current_user)):
+                    works = Work.query.filter_by(teachers_id=current_user.id)
                 else:
-                    projects = Project.query.all()
-                if(projects):
+                    works = Work.query.all()
+                if(works):
                     my_dict = dict() 
-                    for index,value in enumerate(projects):
+                    for index,value in enumerate(works):
                         my_dict[index] = value.as_dict()
                     return my_dict
                 else:
-                    message = "Projects not available"
+                    message = "Works not available"
 
         else:
             message = "Access Denied"
@@ -77,13 +81,18 @@ class WorkAPI(Resource):
                 and data.get('deadline') ):
                 
                 try:
-                    new_work = Work(projects_id=data['projects_id'], 
-                        teachers_id=data['teachers_id'], 
-                        deadline=data['deadline'],
-                        student_id=current_user.id) 
-                    db.session.add(new_work)  
-                    db.session.commit()  
-                    return "Work created"
+                    project = Project.query.filter_by(id=data['projects_id']).first()
+                    teacher = Teacher.query.filter_by(id=data['teachers_id']).first()
+                    if(project and teacher):
+                        new_work = Work(projects_id=data['projects_id'], 
+                            teachers_id=data['teachers_id'], 
+                            deadline=data['deadline'],
+                            student_id=current_user.id) 
+                        db.session.add(new_work)  
+                        db.session.commit()  
+                        return "Work created"
+                    else:
+                        message = "Project or Teacher doesn't exist"
                 except:
                     message = "Work not created"
             else: 
@@ -115,3 +124,28 @@ class WorkAPI(Resource):
             message = "Access Denied"
         
         abort(400, {'message': message})
+
+class FinishWorkAPI(Resource):
+    
+    def put(self, id):
+        message = ""
+        if(is_student(current_user)):
+            try:
+                work = Work.query.filter_by(id=id, student_id=current_user.id).first()
+                if(work):
+                    if(work.finished == True):
+                        message = "Work already finished"
+                    else:
+                        work.finished = True
+                        db.session.commit()  
+                        return "Work finished"
+                else:
+                    message = "Work not found"
+            except Exception as e:
+                message = "Work not finished "+ str(e)
+
+        else:
+            message = "Access Denied"
+        
+        abort(400, {'message': message})
+

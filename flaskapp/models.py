@@ -138,7 +138,7 @@ class Work(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
     teachers_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
-    projects_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False)
+    projects_id = db.Column(db.Integer, db.ForeignKey('project.id'), nullable=False, unique=True)
     finished = db.Column(db.Boolean, nullable=False, default=False)
     start_date = db.Column(db.DateTime, default=datetime.utcnow)
     deadline = db.Column(db.DateTime, nullable=False)
@@ -156,9 +156,9 @@ class Work(db.Model):
 class Rating(db.Model):
     __tablename__ = "rating"
     id = db.Column(db.Integer, primary_key=True)
-    work_id = db.Column(db.Integer, db.ForeignKey('work.id'), nullable=False)
-    teacher_review = db.Column(db.String(200), nullable=False)
-    company_review = db.Column(db.String(200), nullable=False)
+    work_id = db.Column(db.Integer, db.ForeignKey('work.id'), nullable=False, unique=True)
+    teacher_review = db.Column(db.String(200))
+    company_review = db.Column(db.String(200))
     
     def __repr__(self):
         return f"Project ('{self.student_id}, {self.project_id}')"

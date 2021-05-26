@@ -28,14 +28,21 @@ api = Api(app)
 migrate = Migrate(app, db)
 
 
-from flaskapp import routes, auth, project, user, institution, work
+from flaskapp import routes, auth, project, user, institution, work, rating
 
 app.register_blueprint(auth.bp)
-api.add_resource(project.ProjectAPI, '/projects/', '/projects/<int:id>')
-api.add_resource(user.UserAPI, '/users/', '/users/<int:id>')
+
 api.add_resource(institution.InstitutionAPI, '/institutions/', '/institutions/<int:id>')
+
+api.add_resource(project.ProjectAPI, '/projects/', '/projects/<int:id>')
+
+api.add_resource(user.UserAPI, '/users/', '/users/<int:id>')
 api.add_resource(user.UserVerificationAPI, '/users/verify/<int:id>')
 api.add_resource(user.StudentAPI, '/students/', '/students/<int:id>')
 api.add_resource(user.TeacherAPI, '/teachers/', '/teachers/<int:id>')
 api.add_resource(user.CompanyAPI, '/companies/', '/companies/<int:id>')
+
 api.add_resource(work.WorkAPI, '/works/', '/works/<int:id>')
+api.add_resource(work.FinishWorkAPI, '/work/end/<int:id>')
+
+api.add_resource(rating.RateAPI, '/rates/', '/rates/<int:id>')
