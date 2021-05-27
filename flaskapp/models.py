@@ -1,6 +1,7 @@
 from datetime import datetime
 from flaskapp import db, login_manager
 import csv
+from flask_restful import fields, marshal_with
 from flask_login import UserMixin
 from flask import session
 
@@ -123,7 +124,7 @@ class Project(db.Model):
     price = db.Column(db.Integer, nullable=False)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
     deadline = db.Column(db.DateTime)
-    technologies = db.Column(db.PickleType, nullable=False)
+    technologies = db.Column(db.ARRAY(db.String(80)), nullable=False)
     
     works = db.relationship('Work', backref='done', lazy=True)    
 
@@ -181,3 +182,73 @@ def main():
         })
         db.session.add(record)
     db.session.commit()
+
+
+
+rating_fields = {
+    'teacher_review': fields.String,
+    'company_review': fields.String,
+    'id': fields.Integer,
+    'work_id': fields.Integer
+}
+work_fields = {
+    'id': fields.Integer,
+    'student_id': fields.Integer,
+    'teachers_id': fields.Integer,
+    'projects_id': fields.Integer,
+    'start_date': fields.DateTime,
+    'deadline': fields.DateTime,
+    'finished': fields.Boolean,
+    'ratings': fields.Nested(rating_fields)
+}
+project_fields = {
+    'id': fields.Integer,
+    'title': fields.String,
+    'description': fields.String,
+    'price': fields.Integer,
+    'technologies': fields.List,
+    'company_id': fields.Integer,
+    'deadline': fields.DateTime,
+    'active': fields.Boolean,
+    'works': fields.Nested(work_fields)
+}
+teacher_fields = {
+    'id': fields.Integer,
+    'name': fields.String,
+    'email': fields.String,
+    'institution_id': fields.Integer,
+    'verified': fields.Boolean,
+    'works': fields.Nested(work_fields)
+}
+student_fields = {
+    'id': fields.Integer,
+    'name': fields.String,
+    'email': fields.String,
+    'batch': fields.Integer,
+    'student_id': fields.String,
+    'institution_id': fields.Integer,
+    'verified': fields.Boolean,
+    'works': fields.Nested(work_fields)
+}
+company_fields = {
+    'id': fields.Integer,
+    'name': fields.String,
+    'email': fields.String,
+    'location': fields.String,
+    'verified': fields.Boolean,
+    'projects': fields.Nested(project_fields)
+}
+account_fields = {
+    'role': fields.String,
+    'email': fields.String,
+    'id': fields.Integer,
+    'role_id': fields.Integer,
+    'password': fields.String
+}
+institution_fields = {
+    'location': fields.String,
+    'name': fields.String,
+    'id': fields.Integer,
+    'teachers': fields.Nested(teacher_fields),
+    'students': fields.Nested(student_fields)
+}

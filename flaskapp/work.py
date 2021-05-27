@@ -1,6 +1,6 @@
 from flask import Blueprint, session, request, jsonify, abort
 from functools import wraps
-from flaskapp import db, api
+from flaskapp import db, api, pagination
 from flask_login import current_user
 from flask_restful import Resource
 from flaskapp.routes import *
@@ -15,15 +15,15 @@ class WorkAPI(Resource):
         if(logged_in(current_user)):
             if(id):
                 if(is_company(current_user)):
-                    work = Work.query.filter_by(id=id, company_id=current_user.id).first()
+                    work = Work.query.filter_by(id=id, company_id=current_user.id)
                 elif(is_student(current_user)):
-                    work = Work.query.filter_by(id=id, student_id=current_user.id).first()
+                    work = Work.query.filter_by(id=id, student_id=current_user.id)
                 elif(is_teacher(current_user)):
-                    work = Work.query.filter_by(id=id, teachers_id=current_user.id).first()
+                    work = Work.query.filter_by(id=id, teachers_id=current_user.id)
                 else:
-                    work = Work.query.filter_by(id=id).first()
-                if(work):
-                    return work.as_dict()
+                    work = Work.query.filter_by(id=id)
+                if(work.first()):
+                    return pagination.paginate(works, work_fields)
                 else:
                     message = "Work not found"
             else:
@@ -36,10 +36,7 @@ class WorkAPI(Resource):
                 else:
                     works = Work.query.all()
                 if(works):
-                    my_dict = dict() 
-                    for index,value in enumerate(works):
-                        my_dict[index] = value.as_dict()
-                    return my_dict
+                    return pagination.paginate(works, work_fields)
                 else:
                     message = "Works not available"
 

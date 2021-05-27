@@ -6,6 +6,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_restful import Api
 from flask_migrate import Migrate
+from flask_rest_paginate import Pagination
 
 app = Flask(__name__)
 
@@ -26,6 +27,7 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 api = Api(app)
 migrate = Migrate(app, db)
+pagination = Pagination(app, db)
 
 
 from flaskapp import routes, auth, project, user, institution, work, rating

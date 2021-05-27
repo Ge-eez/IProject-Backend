@@ -1,6 +1,6 @@
 from flask import Blueprint, session, request, jsonify, abort
 from functools import wraps
-from flaskapp import db, api
+from flaskapp import db, api, pagination
 from flask_login import current_user
 from flask_restful import Resource
 from flaskapp.routes import *
@@ -15,11 +15,11 @@ class ProjectAPI(Resource):
         if(logged_in(current_user)):
             if(id):
                 if(is_company(current_user)):
-                    project = Project.query.filter_by(id=id, company_id=current_user.id).first()
+                    project = Project.query.filter_by(id=id, company_id=current_user.id)
                 else:
-                    project = Project.query.filter_by(id=id).first()
+                    project = Project.query.filter_by(id=id)
                 if(project):
-                    return project.as_dict()
+                    return pagination.paginate(project, project_fields)
                 else:
                     message = "Project not found"
             else:
@@ -28,10 +28,7 @@ class ProjectAPI(Resource):
                 else:
                     projects = Project.query.all()
                 if(projects):
-                    my_dict = dict() 
-                    for index,value in enumerate(projects):
-                        my_dict[index] = value.as_dict()
-                    return my_dict
+                    return pagination.paginate(projects, project_fields)
                 else:
                     message = "Projects not available"
 

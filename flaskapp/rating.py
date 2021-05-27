@@ -1,6 +1,6 @@
 from flask import Blueprint, session, request, jsonify, abort
 from functools import wraps
-from flaskapp import db, api
+from flaskapp import db, api, pagination
 from flask_login import current_user
 from flask_restful import Resource
 from flaskapp.routes import *
@@ -14,11 +14,12 @@ class RateAPI(Resource):
         message = ""
         if(logged_in(current_user)):
             if(id):
-                rating = Rating.query.filter_by(id=id).first()
+                rate = Rating.query.filter_by(id=id)
+                rating = rate.first()
                 if(rating):
                     if(is_student(current_user) and not(rating.rates.student_id == current_user.id)) or (is_teacher(current_user) and not(rating.rates.teachers_id == current_user.id)):
                         abort(400, {'message': "Access denied"}) 
-                    return rating.as_dict()
+                    return pagination.paginate(rate, rating_fields)
                 else:
                     message = "Rating not found"
             else:
@@ -29,10 +30,7 @@ class RateAPI(Resource):
                 else:
                     ratings = Rating.query.all()
                 if(ratings):
-                    my_dict = dict() 
-                    for index,value in enumerate(ratings):
-                        my_dict[index] = value.as_dict()
-                    return my_dict
+                    return pagination.paginate(ratings, rating_fields)
                 else:
                     message = "Ratings not available"
 

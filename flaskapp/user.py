@@ -1,8 +1,9 @@
 from flask import Blueprint, session, request, jsonify, abort
 from functools import wraps
-from flaskapp import db, api
+from flaskapp import db, api, pagination
 from flask_login import current_user
 from flask_restful import Resource
+from flaskapp.routes import *
 
 from flaskapp.models import *
 
@@ -12,18 +13,15 @@ class UserAPI(Resource):
         message = ""
         if(logged_in(current_user)):
             if(id):
-                user = Account.query.filter_by(id=id).first()
+                user = Account.query.filter_by(id=id)
                 if(user):
-                    return user.as_dict()
+                    return pagination.paginate(user, account_fields)
                 else:
                     message = "User not found"
             else:
                 users = Account.query.all()
                 if(users):
-                    my_dict = dict() 
-                    for index,value in enumerate(users):
-                        my_dict[index] = value.as_dict()
-                    return my_dict
+                    return pagination.paginate(users, account_fields)
                 else:
                     message = "Users not available"
                 
@@ -96,18 +94,15 @@ class StudentAPI(Resource):
         message = ""
         if(logged_in(current_user)):
             if(id):
-                user = Student.query.filter_by(id=id).first()
+                user = Student.query.filter_by(id=id)
                 if(user):
-                    return user.as_dict()
+                    return pagination.paginate(user, student_fields)
                 else:
                     message = "Student not found"
             else:
                 users = Student.query.all()
                 if(users):
-                    my_dict = dict() 
-                    for index,value in enumerate(users):
-                        my_dict[index] = value.as_dict()
-                    return my_dict
+                    return pagination.paginate(users, student_fields)
                 else:
                     message = "Students not available"
                 
@@ -147,18 +142,15 @@ class TeacherAPI(Resource):
         message = ""
         if(logged_in(current_user)):
             if(id):
-                user = Teacher.query.filter_by(id=id).first()
+                user = Teacher.query.filter_by(id=id)
                 if(user):
-                    return user.as_dict()
+                    return pagination.paginate(user, teacher_fields)
                 else:
                     message = "Teacher not found"
             else:
                 users = Teacher.query.all()
                 if(users):
-                    my_dict = dict() 
-                    for index,value in enumerate(users):
-                        my_dict[index] = value.as_dict()
-                    return my_dict
+                    return pagination.paginate(users, teacher_fields)
                 else:
                     message = "Teachers not available"
                 
@@ -197,18 +189,15 @@ class CompanyAPI(Resource):
         message = ""
         if(logged_in(current_user)):
             if(id):
-                user = Company.query.filter_by(id=id).first()
+                user = Company.query.filter_by(id=id)
                 if(user):
-                    return user.as_dict()
+                    return pagination.paginate(user, company_fields)
                 else:
                     message = "Company not found"
             else:
                 users = Company.query.all()
                 if(users):
-                    my_dict = dict() 
-                    for index,value in enumerate(users):
-                        my_dict[index] = value.as_dict()
-                    return my_dict
+                    return pagination.paginate(users, company_fields)
                 else:
                     message = "Companies not available"
                 
