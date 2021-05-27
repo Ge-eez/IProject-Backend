@@ -128,6 +128,8 @@ def login():
                     active = Student.query.get(user.role_id)
                 elif(user.role == 'teacher'):
                     active = Teacher.query.get(user.role_id)
+                elif(user.role == 'admin'):
+                    active = Admin.query.get(user.role_id)
                 login_user(active, remember=False)
                 session["account_type"] = user.role
                 result['message'] = "Logged in"

@@ -65,7 +65,7 @@ class Student(db.Model, UserMixin):
            return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
 
-class Admin(db.Model):
+class Admin(db.Model, UserMixin):
     __tablename__ = "admin"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
@@ -73,7 +73,7 @@ class Admin(db.Model):
     password = db.Column(db.String(60), nullable=False)
     
     def __repr__(self):
-        return f"Admin ('{self.name}, {self.institution_id}')"
+        return f"Admin ('{self.name}')"
     def as_dict(self):
            return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
