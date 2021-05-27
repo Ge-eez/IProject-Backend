@@ -6,6 +6,7 @@ from flask_restful import Resource
 from flaskapp.routes import *
 
 from flaskapp.models import *
+from safrs import SAFRSBase, SAFRSAPI
 
 class IndexAPI(Resource):
         

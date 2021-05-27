@@ -4,6 +4,7 @@ import csv
 from flask_restful import fields, marshal_with
 from flask_login import UserMixin
 from flask import session
+from safrs import SAFRSBase, SAFRSAPI
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -18,8 +19,7 @@ def load_user(user_id):
     else:
         return Account.query.get(int(user_id))
 
-class Company(db.Model, UserMixin):
-    __tablename__ = "company"
+class Company(SAFRSBase, db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), nullable=False, unique=True)
@@ -33,8 +33,7 @@ class Company(db.Model, UserMixin):
            return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
 
-class Institution(db.Model):
-    __tablename__ = "institution"
+class Institution(SAFRSBase, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False, unique=True)
     location = db.Column(db.String(80), nullable=False)
@@ -47,8 +46,7 @@ class Institution(db.Model):
            return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
 
-class Student(db.Model, UserMixin):
-    __tablename__ = "student"
+class Student(SAFRSBase, db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), nullable=False, unique=True)
@@ -65,8 +63,7 @@ class Student(db.Model, UserMixin):
            return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
 
-class Admin(db.Model, UserMixin):
-    __tablename__ = "admin"
+class Admin(SAFRSBase, db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), nullable=False, unique=True)
@@ -78,8 +75,7 @@ class Admin(db.Model, UserMixin):
            return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
 
-class Account(db.Model, UserMixin):
-    __tablename__ = "account"
+class Account(SAFRSBase, db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     role = db.Column(db.String(80), nullable=False)
     role_id = db.Column(db.Integer, nullable=False)
@@ -92,9 +88,7 @@ class Account(db.Model, UserMixin):
            return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
 
-
-class Teacher(db.Model, UserMixin):
-    __tablename__ = "teacher"
+class Teacher(SAFRSBase, db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), nullable=False, unique=True)
@@ -109,10 +103,8 @@ class Teacher(db.Model, UserMixin):
            return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
 
+class Project(SAFRSBase, db.Model):
 
-class Project(db.Model):
-
-    __tablename__ = "project"
     __table_args__ = (
         db.UniqueConstraint('title', 'company_id', name='unique_project'),
     )
@@ -134,8 +126,7 @@ class Project(db.Model):
            return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
 
-class Work(db.Model):
-    __tablename__ = "work"
+class Work(SAFRSBase, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
     teachers_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
@@ -154,8 +145,7 @@ class Work(db.Model):
             return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
 
-class Rating(db.Model):
-    __tablename__ = "rating"
+class Rating(SAFRSBase, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     work_id = db.Column(db.Integer, db.ForeignKey('work.id'), nullable=False, unique=True)
     teacher_review = db.Column(db.String(200))
@@ -182,7 +172,6 @@ def main():
         })
         db.session.add(record)
     db.session.commit()
-
 
 
 rating_fields = {
