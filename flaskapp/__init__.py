@@ -32,7 +32,7 @@ pagination = Pagination(app, db)
 
 
 from flaskapp.models import *
-def create_api(app, HOST="localhost", PORT=5000, API_PREFIX="/swagger"):
+def create_api(app, HOST="localhost", PORT=5000, API_PREFIX=""):
     api = SAFRSAPI(app, host=HOST, port=PORT, prefix=API_PREFIX)
     api.expose_object(Account)
     api.expose_object(Admin)
@@ -43,14 +43,12 @@ def create_api(app, HOST="localhost", PORT=5000, API_PREFIX="/swagger"):
     api.expose_object(Project)
     api.expose_object(Work)
     api.expose_object(Rating)
-    print("Created API: http://{}:{}{}".format(HOST, PORT, API_PREFIX))
+    print("Created API: http://{}:{}/{}".format(HOST, PORT, API_PREFIX))
 
 
-from flaskapp import routes, auth, project, user, institution, work, rating, index
+from flaskapp import routes, auth, project, user, institution, work, rating
 
 app.register_blueprint(auth.bp)
-
-api.add_resource(index.IndexAPI, '/', '/<int:id>')
 
 api.add_resource(institution.InstitutionAPI, '/institutions/', '/institutions/<int:id>')
 
