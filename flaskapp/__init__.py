@@ -30,9 +30,11 @@ migrate = Migrate(app, db)
 pagination = Pagination(app, db)
 
 
-from flaskapp import routes, auth, project, user, institution, work, rating
+from flaskapp import routes, auth, project, user, institution, work, rating, index
 
 app.register_blueprint(auth.bp)
+
+api.add_resource(index.IndexAPI, '/', '/<int:id>')
 
 api.add_resource(institution.InstitutionAPI, '/institutions/', '/institutions/<int:id>')
 
