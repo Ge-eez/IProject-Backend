@@ -18,7 +18,8 @@ def add_to_account(email, hashed_password, role, role_id):
                             role=role,
                             role_id=role_id) 
         
-        return new_account
+        db.session.add(new_user)
+        db.session.commit()
     
     except Exception as e:
         print(e)
@@ -96,10 +97,12 @@ def signup_company():
             new_company = Company(name=data['name'], 
                             location=data['location'],
                             email=data['email']) 
+            print("1")
             db.session.add(new_company)  
-            new_account = add_to_account(data['email'], hashed_password, "company", new_company.id)
-            db.session.add(new_account)  
+            print("2")
             db.session.commit() 
+            print("3")
+            account = add_to_account(data['email'], hashed_password, "company", new_company.id)
 
             if( not account):
                 raise Exception("Account not created")

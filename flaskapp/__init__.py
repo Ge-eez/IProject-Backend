@@ -17,14 +17,17 @@ app.config['SECRET_KEY'] = 'f604efb78b05fc462348c8f5f4cf82c7'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config["DEBUG"] = True
 
+
+db = SQLAlchemy()
 dbUrl = os.getenv("DATABASE_URL")
 if(dbUrl[8] == ":"):
     dbUrl = dbUrl[0:8] + "ql" + dbUrl[8:len(dbUrl)]
 app.config['SQLALCHEMY_DATABASE_URI'] = dbUrl 
+db.init_app(app) 
+
 
 bcrypt = Bcrypt(app)
 Session(app)
-db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 api = Api(app)
 migrate = Migrate(app, db)
@@ -67,4 +70,4 @@ api.add_resource(work.FinishWorkAPI, '/work/end/<int:id>')
 api.add_resource(rating.RateAPI, '/rates/', '/rates/<int:id>')
 
 
-create_api(app)
+# create_api(app)
