@@ -135,7 +135,7 @@ def login():
                 result['message'] = "Logged in"
                 result['user_id'] = current_user.id
             else:
-                result['message'] = "Invalid login"
+                abort(404, {'message': "Invalid login"})
         else:
             raise Exception("Form is missing")
     
