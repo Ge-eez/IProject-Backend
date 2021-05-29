@@ -33,7 +33,7 @@ def signup_student():
     data = request.form  
     message = ""
     try:
-        if(data):
+        if(data.get('name') and data.get('institution_id')and data.get('batch') and data.get('student_id') and data.get('email') and data.get('password')):
             hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
             new_student = Student(name=data['name'], 
                             email=data['email'], 
@@ -63,7 +63,7 @@ def signup_teacher():
     data = request.form  
     message = ""
     try:
-        if(data):
+        if(data.get('name') and data.get('institution_id') and data.get('email') and data.get('password')):
             hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
             new_teacher = Teacher(name=data['name'], 
                             email=data['email'], 
@@ -91,7 +91,7 @@ def signup_company():
     data = request.form  
     message = ""
     try:
-        if(data):
+        if(data.get('name') and data.get('location') and data.get('email') and data.get('password')):
             hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
             new_company = Company(name=data['name'], 
                             location=data['location'],
@@ -119,7 +119,7 @@ def login():
     data = request.form  
     result = {}
     try:
-        if(data):
+        if(data.get('email') and data.get('password')):
             user = Account.query.filter_by(email=data['email']).first()
             if(user and bcrypt.check_password_hash(user.password, data['password'])):
                 if(user.role == 'company'):
