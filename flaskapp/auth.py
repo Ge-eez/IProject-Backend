@@ -59,7 +59,7 @@ def signup_student():
 @bp.route('/register_teacher', methods=['POST'])
 def signup_teacher():  
     if(logged_in(current_user)):
-        return jsonify({'message': "Already logged in"}))
+        return jsonify({'message': "Already logged in"})
     data = request.form  
     message = ""
     try:

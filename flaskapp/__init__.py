@@ -29,6 +29,7 @@ login_manager = LoginManager(app)
 api = Api(app)
 migrate = Migrate(app, db)
 pagination = Pagination(app, db)
+app.app_context().push()
 
 
 from flaskapp.models import *
@@ -66,4 +67,4 @@ api.add_resource(work.FinishWorkAPI, '/work/end/<int:id>')
 api.add_resource(rating.RateAPI, '/rates/', '/rates/<int:id>')
 
 
-# create_api(app)
+create_api(app)
