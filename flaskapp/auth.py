@@ -1,5 +1,5 @@
 from flask_bcrypt import Bcrypt
-from flask import Blueprint, session, request, jsonify, abort
+from flask import Blueprint, session, request, jsonify
 from functools import wraps
 from flaskapp import db, bcrypt
 from flask_login import login_user, current_user, logout_user
@@ -29,7 +29,7 @@ def add_to_account(email, hashed_password, role, role_id):
 @bp.route('/register_student', methods=['POST'])
 def signup_student():  
     if(logged_in(current_user)):
-        abort(400, {'message': "Already logged in"})
+        return {'message': "Already logged in"}
     data = request.form  
     message = ""
     try:
@@ -59,7 +59,7 @@ def signup_student():
 @bp.route('/register_teacher', methods=['POST'])
 def signup_teacher():  
     if(logged_in(current_user)):
-        abort(400, {'message': "Already logged in"})
+        return {'message': "Already logged in"}
     data = request.form  
     message = ""
     try:
@@ -87,7 +87,7 @@ def signup_teacher():
 @bp.route('/register_company', methods=['POST'])
 def signup_company():  
     if(logged_in(current_user)):
-        abort(400, {'message': "Already logged in"})
+        return {'message': "Already logged in"}
     data = request.form  
     message = ""
     try:
@@ -115,7 +115,7 @@ def signup_company():
 @bp.route('/login', methods=['POST'])
 def login():
     if(logged_in(current_user)):
-        abort(400, {'message': "Already logged in"})
+        return {'message': "Already logged in"}
     data = request.form  
     result = {}
     try:
@@ -135,7 +135,7 @@ def login():
                 result['message'] = "Logged in"
                 result['user_id'] = current_user.id
             else:
-                abort(404, {'message': "Invalid login"})
+                result['message'] = "Invalid login"
         else:
             raise Exception("Form is missing")
     

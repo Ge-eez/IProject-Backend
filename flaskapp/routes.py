@@ -10,7 +10,7 @@ from flaskapp.models import *
 def logged_in(current_user):
     return current_user.is_authenticated
 def logged_out(current_user):
-    return not(current_user.is_authenticated)
+    return current_user.is_anonymous
 def is_admin(current_user):
     return (logged_in(current_user) and session['account_type'] == 'admin')
 def is_student(current_user):
