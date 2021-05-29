@@ -29,7 +29,7 @@ def add_to_account(email, hashed_password, role, role_id):
 @bp.route('/register_student', methods=['POST'])
 def signup_student():  
     if(logged_in(current_user)):
-        abort(400, {'message': "Already logged in"})
+        return jsonify({'message': "Already logged in"})
     data = request.form  
     message = ""
     try:
@@ -59,7 +59,7 @@ def signup_student():
 @bp.route('/register_teacher', methods=['POST'])
 def signup_teacher():  
     if(logged_in(current_user)):
-        abort(400, {'message': "Already logged in"})
+        return jsonify({'message': "Already logged in"}))
     data = request.form  
     message = ""
     try:
@@ -87,7 +87,7 @@ def signup_teacher():
 @bp.route('/register_company', methods=['POST'])
 def signup_company():  
     if(logged_in(current_user)):
-        abort(400, {'message': "Already logged in"})
+        return jsonify({'message': "Already logged in"})
     data = request.form  
     message = ""
     try:
@@ -116,7 +116,7 @@ def signup_company():
 @bp.route('/login', methods=['POST'])
 def login():
     if(logged_in(current_user)):
-        abort(400, {'message': "Already logged in"})
+        return jsonify({'message': "Already logged in"})
     data = request.form  
     result = {}
     try:

@@ -116,7 +116,7 @@ class Project(SAFRSBase, db.Model):
     price = db.Column(db.Integer, nullable=False)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
     deadline = db.Column(db.DateTime)
-    technologies = db.Column(db.ARRAY(db.String(80)), nullable=False)
+    technologies = db.Column(db.PickleType, nullable=False)
     
     works = db.relationship('Work', backref='done', lazy=True)    
 
@@ -195,7 +195,7 @@ project_fields = {
     'title': fields.String,
     'description': fields.String,
     'price': fields.Integer,
-    'technologies': fields.List,
+    'technologies': fields.String,
     'company_id': fields.Integer,
     'deadline': fields.DateTime,
     'active': fields.Boolean,

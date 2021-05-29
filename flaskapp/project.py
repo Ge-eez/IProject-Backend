@@ -24,7 +24,7 @@ class ProjectAPI(Resource):
                     message = "Project not found"
             else:
                 if(is_company(current_user)):
-                    project = Project.query.filter_by(company_id=current_user.id)
+                    projects = Project.query.filter_by(company_id=current_user.id)
                 else:
                     projects = Project.query.all()
                 if(projects):
