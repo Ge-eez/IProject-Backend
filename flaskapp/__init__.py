@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flask_cors import CORS
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -25,6 +26,12 @@ if(dbUrl[8] == ":"):
 app.config['SQLALCHEMY_DATABASE_URI'] = dbUrl 
 db.init_app(app) 
 
+CORS(app)
+cors = CORS(app, resource={
+    r"/*":{
+        "origins":"*"
+    }
+})
 
 bcrypt = Bcrypt(app)
 Session(app)
