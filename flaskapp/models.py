@@ -206,7 +206,8 @@ work_fields = {
     'start_date': fields.DateTime,
     'deadline': fields.DateTime,
     'finished': fields.Boolean,
-    'ratings': fields.Nested(rating_fields)
+    'ratings': fields.Nested(rating_fields),
+    'pays': fields.Nested(payment_fields)
 }
 project_fields = {
     'id': fields.Integer,
