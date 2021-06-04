@@ -128,12 +128,16 @@ def login():
             if(user and bcrypt.check_password_hash(user.password, data['password'])):
                 if(user.role == 'company'):
                     active = Company.query.get(user.role_id)
+                    result['role'] = 'Company'
                 elif(user.role == 'student'):
                     active = Student.query.get(user.role_id)
+                    result['role'] = 'Student'
                 elif(user.role == 'teacher'):
                     active = Teacher.query.get(user.role_id)
+                    result['role'] = 'Teacher'
                 elif(user.role == 'admin'):
                     active = Admin.query.get(user.role_id)
+                    result['role'] = 'Admin'
                 login_user(active, remember=False)
                 session["account_type"] = user.role
                 result['message'] = "Logged in"
