@@ -79,4 +79,4 @@ api.add_resource(rating.RateAPI, '/rates/', '/rates/<int:id>')
 
 api.add_resource(payment.PaymentAPI, '/payments/', '/payments/<int:id>')
 
-# create_api(app)
+create_api(app)
