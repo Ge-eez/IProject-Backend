@@ -67,7 +67,6 @@ class Admin(SAFRSBase, db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(80), nullable=False, unique=True)
-    password = db.Column(db.String(60), nullable=False)
     
     def __repr__(self):
         return f"Admin ('{self.name}')"
@@ -138,6 +137,8 @@ class Work(SAFRSBase, db.Model):
     
     ratings = db.relationship('Rating', backref='rates', lazy=True)
 
+    payments = db.relationship('Payment', backref='pays', lazy=True)
+
     def __repr__(self):
         return f"Project ('{self.student_id}, {self.project_id}')"
     
@@ -157,6 +158,18 @@ class Rating(SAFRSBase, db.Model):
     def as_dict(self):
            return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
+class Payment(SAFRSBase, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    work_id = db.Column(db.Integer, db.ForeignKey('work.id'), nullable=False)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
+    price = db.Column(db.Integer, nullable=False)
+    
+    
+    def __repr__(self):
+        return f"Payment ('{self.work_id}, {self.price}')"
+
+    def as_dict(self):
+           return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
 def main():
     global db
@@ -173,7 +186,12 @@ def main():
         db.session.add(record)
     db.session.commit()
 
-
+payment_fields = {
+    'price': fields.Integer,
+    'date': fields.DateTime,
+    'id': fields.Integer,
+    'work_id': fields.Integer
+}
 rating_fields = {
     'teacher_review': fields.String,
     'company_review': fields.String,

@@ -54,10 +54,11 @@ def create_api(app, HOST="localhost", PORT=5000, API_PREFIX=""):
     api.expose_object(Project)
     api.expose_object(Work)
     api.expose_object(Rating)
+    api.expose_object(Payment)
     print("Created API: http://{}:{}/{}".format(HOST, PORT, API_PREFIX))
 
 
-from flaskapp import routes, auth, project, user, institution, work, rating
+from flaskapp import routes, auth, project, user, institution, work, rating, payment
 
 app.register_blueprint(auth.bp)
 
@@ -76,5 +77,6 @@ api.add_resource(work.FinishWorkAPI, '/work/end/<int:id>')
 
 api.add_resource(rating.RateAPI, '/rates/', '/rates/<int:id>')
 
+api.add_resource(payment.PaymentAPI, '/payments/', '/payments/<int:id>')
 
-create_api(app)
+# create_api(app)
