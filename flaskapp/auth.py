@@ -128,13 +128,13 @@ def login():
             if(user and bcrypt.check_password_hash(user.password, data['password'])):
                 if(user.role == 'company'):
                     active = Company.query.get(user.role_id)
-                    result['role'] = 'Company'
+                    result['role'] = 'companies'
                 elif(user.role == 'student'):
                     active = Student.query.get(user.role_id)
-                    result['role'] = 'Student'
+                    result['role'] = 'students'
                 elif(user.role == 'teacher'):
                     active = Teacher.query.get(user.role_id)
-                    result['role'] = 'Teacher'
+                    result['role'] = 'teachers'
                 elif(user.role == 'admin'):
                     active = Admin.query.get(user.role_id)
                     result['role'] = 'Admin'
