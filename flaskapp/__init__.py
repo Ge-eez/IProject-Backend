@@ -16,6 +16,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 app.config['SECRET_KEY'] = 'f604efb78b05fc462348c8f5f4cf82c7'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config["DEBUG"] = True
 
 
