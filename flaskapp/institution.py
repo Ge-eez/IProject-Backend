@@ -12,7 +12,7 @@ class InstitutionAPI(Resource):
         
     def get(self, id=None):
         message = ""
-        if(logged_in(current_user)):
+        if(True):
             if(id):
                 institution = Institution.query.filter_by(id=id)
                 if(institution):
