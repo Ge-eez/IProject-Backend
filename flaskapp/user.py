@@ -92,7 +92,7 @@ class StudentAPI(Resource):
         
     def get(self, id=None):
         message = ""
-        if(logged_in(current_user)):
+        if((current_uslogged_iner)):
             if(id):
                 user = Student.query.filter_by(id=id)
                 if(user):
