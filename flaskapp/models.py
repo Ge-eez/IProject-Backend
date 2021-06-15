@@ -13,7 +13,7 @@ def load_user(user_id):
     # if(sess.get('account_type')):
     #     print(sess['account_type'])
     #     return Account.query.get(int(user_id))
-    print(sess)
+    print("session from models", sess)
     if sess.get('account_type') == 'admin':
         return Admin.query.get(int(user_id))
     elif sess.get('account_type') == 'company':

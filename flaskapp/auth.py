@@ -140,7 +140,7 @@ def login():
                     result['role'] = 'Admin'
 
                 session["account_type"] = user.role
-                print(session)
+                print("session from auth", session)
                 login_user(active, remember=True)
                 result['message'] = "Logged in"
                 result['user_id'] = current_user.id
