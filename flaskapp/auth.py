@@ -138,8 +138,9 @@ def login():
                 elif(user.role == 'admin'):
                     active = Admin.query.get(user.role_id)
                     result['role'] = 'Admin'
-                login_user(active, remember=True)
+                    
                 session["account_type"] = user.role
+                login_user(active, remember=True)
                 result['message'] = "Logged in"
                 result['user_id'] = current_user.id
             else:
