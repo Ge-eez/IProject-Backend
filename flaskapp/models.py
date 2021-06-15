@@ -8,16 +8,23 @@ from safrs import SAFRSBase, SAFRSAPI
 
 @login_manager.user_loader
 def load_user(user_id):
-    if session['account_type'] == 'admin':
+    sess = session
+    # print(sess)
+    # if(sess.get('account_type')):
+    #     print(sess['account_type'])
+    #     return Account.query.get(int(user_id))
+    if sess.get('account_type') == 'admin':
         return Admin.query.get(int(user_id))
-    elif session['account_type'] == 'company':
+    elif sess.get('account_type') == 'company':
         return Company.query.get(int(user_id))
-    elif session['account_type'] == 'student':
+    elif sess.get('account_type') == 'student':
         return Student.query.get(int(user_id))
-    elif session['account_type'] == 'teacher':
+    elif sess.get('account_type') == 'teacher':
         return Teacher.query.get(int(user_id))
     else:
         return Account.query.get(int(user_id))
+    # else:
+    #     return Account.query.get(int(user_id))
 
 class Company(SAFRSBase, db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)

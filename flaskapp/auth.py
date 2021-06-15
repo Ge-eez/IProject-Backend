@@ -123,7 +123,7 @@ def login():
     data = request.form  
     result = {}
     try:
-        if(data.get('email') and data.get('password')):
+        if(bool(data.get('email') and data.get('password'))):
             user = Account.query.filter_by(email=data['email']).first()
             if(user and bcrypt.check_password_hash(user.password, data['password'])):
                 if(user.role == 'company'):
@@ -138,8 +138,9 @@ def login():
                 elif(user.role == 'admin'):
                     active = Admin.query.get(user.role_id)
                     result['role'] = 'Admin'
-                    
+
                 session["account_type"] = user.role
+                print(session)
                 login_user(active, remember=True)
                 result['message'] = "Logged in"
                 result['user_id'] = current_user.id

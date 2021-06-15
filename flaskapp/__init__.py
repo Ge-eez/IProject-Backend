@@ -12,7 +12,7 @@ from safrs import SAFRSBase, SAFRSAPI
 
 app = Flask(__name__)
 
-app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
 app.config['SECRET_KEY'] = 'f604efb78b05fc462348c8f5f4cf82c7'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
@@ -75,4 +75,4 @@ api.add_resource(rating.RateAPI, '/rates/', '/rates/<int:id>')
 
 api.add_resource(payment.PaymentAPI, '/payments/', '/payments/<int:id>')
 
-create_api(app)
+# create_api(app)
