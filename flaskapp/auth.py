@@ -1,9 +1,12 @@
 from flask_bcrypt import Bcrypt
 from flask import Blueprint, session, request, jsonify, abort
 from functools import wraps
-from flaskapp import db, bcrypt
+from flaskapp import db, bcrypt, app
 from flask_login import login_user, current_user, logout_user
 from flaskapp.routes import *
+import jwt
+from datetime import datetime
+from datetime import timedelta
 
 from flaskapp.models import *
 
@@ -144,8 +147,11 @@ def login():
                 login_user(active, remember=True)
                 result['message'] = "Logged in"
                 result['user_id'] = current_user.id
+                result["token"] = jwt.encode({'id' : current_user.id, 'exp' : datetime.utcnow() + timedelta(minutes=30)}, app.config['SECRET_KEY'], algorithm="HS256").decode("utf-8") 
+                print(result['token'])
+                
             else:
-                abort(404, {'message': "Invalid login"})
+                return abort(404, {'message': "Invalid login"})
         else:
             raise Exception("Form is missing")
     

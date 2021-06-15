@@ -29,7 +29,7 @@ class UserAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
     def delete(self, id):
         message = ""
@@ -56,7 +56,7 @@ class UserAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
 class UserVerificationAPI(Resource):
         
@@ -86,13 +86,13 @@ class UserVerificationAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
 class StudentAPI(Resource):
         
     def get(self, id=None):
         message = ""
-        if((current_uslogged_iner)):
+        if(logged_in(current_user)):
             if(id):
                 user = Student.query.filter_by(id=id)
                 if(user):
@@ -110,7 +110,7 @@ class StudentAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
     
     def delete(self, id):
@@ -134,7 +134,7 @@ class StudentAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
 class TeacherAPI(Resource):
         
@@ -158,7 +158,7 @@ class TeacherAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
     def delete(self, id):
         message = ""
@@ -181,7 +181,7 @@ class TeacherAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
 class CompanyAPI(Resource):
         
@@ -205,7 +205,7 @@ class CompanyAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
     def delete(self, id):
         message = ""
@@ -228,4 +228,4 @@ class CompanyAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})

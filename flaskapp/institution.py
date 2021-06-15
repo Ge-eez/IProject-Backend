@@ -30,4 +30,4 @@ class InstitutionAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})

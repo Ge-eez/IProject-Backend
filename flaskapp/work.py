@@ -43,7 +43,7 @@ class WorkAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
 
     def put(self, id):
@@ -66,7 +66,7 @@ class WorkAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
 
     def post(self):
@@ -98,7 +98,7 @@ class WorkAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
     def delete(self, id):
         message = ""
@@ -120,7 +120,7 @@ class WorkAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
 class FinishWorkAPI(Resource):
     
@@ -144,5 +144,5 @@ class FinishWorkAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 

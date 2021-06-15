@@ -35,7 +35,7 @@ class ProjectAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
 
     def put(self, id):
@@ -58,7 +58,7 @@ class ProjectAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
 
     def post(self):
@@ -90,7 +90,7 @@ class ProjectAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
     def delete(self, id):
         message = ""
@@ -112,5 +112,5 @@ class ProjectAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 

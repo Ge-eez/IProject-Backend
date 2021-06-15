@@ -18,7 +18,7 @@ class RateAPI(Resource):
                 rating = rate.first()
                 if(rating):
                     if(is_student(current_user) and not(rating.rates.student_id == current_user.id)) or (is_teacher(current_user) and not(rating.rates.teachers_id == current_user.id)):
-                        abort(400, {'message': "Access denied"}) 
+                        return abort(400, {'message': "Access denied"}) 
                     return pagination.paginate(rate, rating_fields)
                 else:
                     message = "Rating not found"
@@ -37,7 +37,7 @@ class RateAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
     def post(self):
         message = ""
@@ -58,7 +58,7 @@ class RateAPI(Resource):
                                 db.session.commit() 
                                 return "Reviewed successfully" 
                         else:
-                            abort(400, {'message': "Access denied"})     
+                            return abort(400, {'message': "Access denied"})     
                     elif(rating and is_teacher(current_user) ):
                         if(work.teachers_id == current_user.id):
                             if(rating.teacher_review):
@@ -68,7 +68,7 @@ class RateAPI(Resource):
                                 db.session.commit() 
                                 return "Reviewed successfully" 
                         else:
-                            abort(400, {'message': "Access denied"})     
+                            return abort(400, {'message': "Access denied"})     
                     elif(is_company(current_user)):
                         if(work.done.company_id == current_user.id):
                             new_rating = Rating(work_id=data['work_id'], 
@@ -77,7 +77,7 @@ class RateAPI(Resource):
                             db.session.commit() 
                             return "Reviewed successfully" 
                         else:
-                            abort(400, {'message': "Access denied"})  
+                            return abort(400, {'message': "Access denied"})  
                     elif(is_teacher(current_user)):
                         if(work.teachers_id == current_user.id):
                             new_rating = Rating(work_id=data['work_id'], 
@@ -86,7 +86,7 @@ class RateAPI(Resource):
                             db.session.commit() 
                             return "Reviewed successfully" 
                         else:
-                            abort(400, {'message': "Access denied"})  
+                            return abort(400, {'message': "Access denied"})  
                     
                 except:
                     message = "Work not created"
@@ -96,5 +96,5 @@ class RateAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 

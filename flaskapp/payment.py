@@ -18,7 +18,7 @@ class PaymentAPI(Resource):
                 payment = rate.first()
                 if(payment):
                     if(is_student(current_user) and not(payment.pays.student_id == current_user.id)):
-                        abort(400, {'message': "Access denied"}) 
+                        return abort(400, {'message': "Access denied"}) 
                     return pagination.paginate(pay, payment_fields)
                 else:
                     message = "Payment not found"
@@ -35,7 +35,7 @@ class PaymentAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
     def post(self):
         message = ""
@@ -53,7 +53,7 @@ class PaymentAPI(Resource):
                         db.session.commit() 
                         return "Paid successfully" 
                     else:
-                        abort(400, {'message': "Access denied"})  
+                        return abort(400, {'message': "Access denied"})  
                     
                 except:
                     message = "Payment not created"
@@ -63,5 +63,5 @@ class PaymentAPI(Resource):
         else:
             message = "Access Denied"
         
-        abort(400, {'message': message})
+        return abort(400, {'message': message})
 
