@@ -90,25 +90,22 @@ class UserVerificationAPI(Resource):
 
 class StudentAPI(Resource):
         
+    @token_required_student
     def get(self, id=None):
         message = ""
-        if(logged_in(current_user)):
-            if(id):
-                user = Student.query.filter_by(id=id)
-                if(user):
-                    return pagination.paginate(user, student_fields)
-                else:
-                    message = "Student not found"
+        if(id):
+            user = Student.query.filter_by(id=id)
+            if(user):
+                return pagination.paginate(user, student_fields)
             else:
-                users = Student.query.all()
-                if(users):
-                    return pagination.paginate(users, student_fields)
-                else:
-                    message = "Students not available"
-                
-
+                message = "Student not found"
         else:
-            message = "Access Denied"
+            users = Student.query.all()
+            if(users):
+                return pagination.paginate(users, student_fields)
+            else:
+                message = "Students not available"
+            
         
         return abort(400, {'message': message})
 
@@ -138,25 +135,22 @@ class StudentAPI(Resource):
 
 class TeacherAPI(Resource):
         
+    @token_required_teacher
     def get(self, id=None):
         message = ""
-        if(logged_in(current_user)):
-            if(id):
-                user = Teacher.query.filter_by(id=id)
-                if(user):
-                    return pagination.paginate(user, teacher_fields)
-                else:
-                    message = "Teacher not found"
+        if(id):
+            user = Teacher.query.filter_by(id=id)
+            if(user):
+                return pagination.paginate(user, teacher_fields)
             else:
+                message = "Teacher not found"
+        else:
                 users = Teacher.query.all()
                 if(users):
                     return pagination.paginate(users, teacher_fields)
                 else:
                     message = "Teachers not available"
                 
-
-        else:
-            message = "Access Denied"
         
         return abort(400, {'message': message})
 
@@ -185,25 +179,23 @@ class TeacherAPI(Resource):
 
 class CompanyAPI(Resource):
         
+    @token_required_company
     def get(self, id=None):
         message = ""
-        if(logged_in(current_user)):
-            if(id):
-                user = Company.query.filter_by(id=id)
-                if(user):
-                    return pagination.paginate(user, company_fields)
-                else:
-                    message = "Company not found"
+        if(id):
+            user = Company.query.filter_by(id=id)
+            if(user):
+                return pagination.paginate(user, company_fields)
             else:
-                users = Company.query.all()
-                if(users):
-                    return pagination.paginate(users, company_fields)
-                else:
-                    message = "Companies not available"
-                
-
+                message = "Company not found"
         else:
-            message = "Access Denied"
+            users = Company.query.all()
+            if(users):
+                return pagination.paginate(users, company_fields)
+            else:
+                message = "Companies not available"
+            
+
         
         return abort(400, {'message': message})
 

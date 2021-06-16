@@ -10,24 +10,21 @@ from flaskapp.models import *
 
 class InstitutionAPI(Resource):
         
+    @token_required_student
     def get(self, id=None):
         message = ""
-        if(True):
-            if(id):
-                institution = Institution.query.filter_by(id=id)
-                if(institution):
-                    return pagination.paginate(institution, institution_fields)
-                else:
-                    message = "Institution not found"
+        if(id):
+            institution = Institution.query.filter_by(id=id)
+            if(institution):
+                return pagination.paginate(institution, institution_fields)
             else:
-                institutions = Institution.query.all()
-                if(institutions):
-                    return pagination.paginate(institutions, institution_fields)
-                else:
-                    message = "Institutions not available"
-                
-
+                message = "Institution not found"
         else:
-            message = "Access Denied"
+            institutions = Institution.query.all()
+            if(institutions):
+                return pagination.paginate(institutions, institution_fields)
+            else:
+                message = "Institutions not available"
+                
         
         return abort(400, {'message': message})

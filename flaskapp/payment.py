@@ -32,8 +32,6 @@ class PaymentAPI(Resource):
                 else:
                     message = "Payments not available"
 
-        else:
-            message = "Access Denied"
         
         return abort(400, {'message': message})
 
