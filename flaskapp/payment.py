@@ -10,19 +10,19 @@ from flaskapp.models import *
 
 class PaymentAPI(Resource):
         
+    @token_required
     def get(self, id=None):
         message = ""
-        if(logged_in(current_user)):
-            if(id):
-                pay = Payment.query.filter_by(id=id)
-                payment = rate.first()
-                if(payment):
-                    if(is_student(current_user) and not(payment.pays.student_id == current_user.id)):
-                        return abort(400, {'message': "Access denied"}) 
-                    return pagination.paginate(pay, payment_fields)
-                else:
-                    message = "Payment not found"
+        if(id):
+            pay = Payment.query.filter_by(id=id)
+            payment = rate.first()
+            if(payment):
+                if(is_student(current_user) and not(payment.pays.student_id == current_user.id)):
+                    return abort(400, {'message': "Access denied"}) 
+                return pagination.paginate(pay, payment_fields)
             else:
+                message = "Payment not found"
+        else:
                 if(is_student(current_user)):
                     payments = Payment.query.join(Work, Work.student_id == current_user.id)
                 else:

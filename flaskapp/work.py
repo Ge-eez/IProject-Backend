@@ -10,23 +10,23 @@ from flaskapp.models import *
 
 class WorkAPI(Resource):
         
+    @token_required
     def get(self, id=None):
         message = ""
-        if(logged_in(current_user)):
-            if(id):
-                if(is_company(current_user)):
-                    work = Work.query.filter_by(id=id, company_id=current_user.id)
-                elif(is_student(current_user)):
-                    work = Work.query.filter_by(id=id, student_id=current_user.id)
-                elif(is_teacher(current_user)):
-                    work = Work.query.filter_by(id=id, teachers_id=current_user.id)
-                else:
-                    work = Work.query.filter_by(id=id)
-                if(work.first()):
-                    return pagination.paginate(works, work_fields)
-                else:
-                    message = "Work not found"
+        if(id):
+            if(is_company(current_user)):
+                work = Work.query.filter_by(id=id, company_id=current_user.id)
+            elif(is_student(current_user)):
+                work = Work.query.filter_by(id=id, student_id=current_user.id)
+            elif(is_teacher(current_user)):
+                work = Work.query.filter_by(id=id, teachers_id=current_user.id)
             else:
+                work = Work.query.filter_by(id=id)
+            if(work.first()):
+                return pagination.paginate(works, work_fields)
+            else:
+                message = "Work not found"
+        else:
                 if(is_company(current_user)):
                     works = Work.query.join(Project, Work.projects_id==Project.id).filter(Project.company_id==current_user.id)
                 elif(is_student(current_user)):
@@ -40,8 +40,6 @@ class WorkAPI(Resource):
                 else:
                     message = "Works not available"
 
-        else:
-            message = "Access Denied"
         
         return abort(400, {'message': message})
 

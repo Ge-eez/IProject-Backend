@@ -10,19 +10,19 @@ from flaskapp.models import *
 
 class RateAPI(Resource):
         
+    @token_required
     def get(self, id=None):
         message = ""
-        if(logged_in(current_user)):
-            if(id):
-                rate = Rating.query.filter_by(id=id)
-                rating = rate.first()
-                if(rating):
-                    if(is_student(current_user) and not(rating.rates.student_id == current_user.id)) or (is_teacher(current_user) and not(rating.rates.teachers_id == current_user.id)):
-                        return abort(400, {'message': "Access denied"}) 
-                    return pagination.paginate(rate, rating_fields)
-                else:
-                    message = "Rating not found"
+        if(id):
+            rate = Rating.query.filter_by(id=id)
+            rating = rate.first()
+            if(rating):
+                if(is_student(current_user) and not(rating.rates.student_id == current_user.id)) or (is_teacher(current_user) and not(rating.rates.teachers_id == current_user.id)):
+                    return abort(400, {'message': "Access denied"}) 
+                return pagination.paginate(rate, rating_fields)
             else:
+                message = "Rating not found"
+        else:
                 if(is_student(current_user)):
                     ratings = Rating.query.join(Work, Work.student_id == current_user.id)
                 elif(is_teacher(current_user)):
@@ -34,9 +34,7 @@ class RateAPI(Resource):
                 else:
                     message = "Ratings not available"
 
-        else:
-            message = "Access Denied"
-        
+       
         return abort(400, {'message': message})
 
     def post(self):

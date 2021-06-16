@@ -9,25 +9,22 @@ from flaskapp.models import *
 
 class UserAPI(Resource):
         
+    @token_required
     def get(self, id=None):
         message = ""
-        if(logged_in(current_user)):
-            if(id):
-                user = Account.query.filter_by(id=id)
-                if(user):
-                    return pagination.paginate(user, account_fields)
-                else:
-                    message = "User not found"
+        if(id):
+            user = Account.query.filter_by(id=id)
+            if(user):
+                return pagination.paginate(user, account_fields)
             else:
+                message = "User not found"
+        else:
                 users = Account.query.all()
                 if(users):
                     return pagination.paginate(users, account_fields)
                 else:
                     message = "Users not available"
                 
-
-        else:
-            message = "Access Denied"
         
         return abort(400, {'message': message})
 
@@ -109,27 +106,23 @@ class StudentAPI(Resource):
         
         return abort(400, {'message': message})
 
-    
+    @token_required
     def delete(self, id):
         message = ""
-        if(logged_in(current_user)):
-            try:
-                user = Student.query.filter_by(id=id)
-                student = user.first()
-                if(student):
-                    account = Account.query.filter_by(role_id=student.id, role='student')
+        try:
+            user = Student.query.filter_by(id=id)
+            student = user.first()
+            if(student):
+                account = Account.query.filter_by(role_id=student.id, role='student')
 
-                    user.delete()
-                    account.delete()
-                    db.session.commit()  
-                    return "Account deleted"
-                else:
-                    message = "Account not found"
-            except Exception as e:
-                message = "Account not deleted "+ str(e)
-
-        else:
-            message = "Access Denied"
+                user.delete()
+                account.delete()
+                db.session.commit()  
+                return "Account deleted"
+            else:
+                message = "Account not found"
+        except Exception as e:
+            message = "Account not deleted "+ str(e)
         
         return abort(400, {'message': message})
 
@@ -154,26 +147,23 @@ class TeacherAPI(Resource):
         
         return abort(400, {'message': message})
 
+    @token_required
     def delete(self, id):
         message = ""
-        if(logged_in(current_user)):
-            try:
-                user = Teacher.query.filter_by(id=id)
-                teacher = user.first()
-                if(teacher):
-                    account = Account.query.filter_by(role_id=teacher.id, role='teacher')
+        try:
+            user = Teacher.query.filter_by(id=id)
+            teacher = user.first()
+            if(teacher):
+                account = Account.query.filter_by(role_id=teacher.id, role='teacher')
 
-                    user.delete()
-                    account.delete()
-                    db.session.commit()  
-                    return "Account deleted"
-                else:
-                    message = "Account not found"
-            except Exception as e:
-                message = "Account not deleted "+ str(e)
-
-        else:
-            message = "Access Denied"
+                user.delete()
+                account.delete()
+                db.session.commit()  
+                return "Account deleted"
+            else:
+                message = "Account not found"
+        except Exception as e:
+            message = "Account not deleted "+ str(e)
         
         return abort(400, {'message': message})
 
@@ -199,25 +189,23 @@ class CompanyAPI(Resource):
         
         return abort(400, {'message': message})
 
+    @token_required
     def delete(self, id):
         message = ""
-        if(logged_in(current_user)):
-            try:
-                user = Company.query.filter_by(id=id)
-                company = user.first()
-                if(company):
-                    account = Account.query.filter_by(role_id=company.id, role='company')
+        try:
+            user = Company.query.filter_by(id=id)
+            company = user.first()
+            if(company):
+                account = Account.query.filter_by(role_id=company.id, role='company')
 
-                    user.delete()
-                    account.delete()
-                    db.session.commit()  
-                    return "Account deleted"
-                else:
-                    message = "Account not found"
-            except Exception as e:
-                message = "Account not deleted "+ str(e)
+                user.delete()
+                account.delete()
+                db.session.commit()  
+                return "Account deleted"
+            else:
+                message = "Account not found"
+        except Exception as e:
+            message = "Account not deleted "+ str(e)
 
-        else:
-            message = "Access Denied"
         
         return abort(400, {'message': message})

@@ -101,6 +101,26 @@ def token_required_admin(f):
 
     return decorated
 
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        if 'X-Access-Token' in request.headers:
+            token = request.headers['X-Access-Token']
+        if not token:
+            return {'message': 'Token is missing'}, 403
+
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+                
+            currentUser = Account.query.filter_by(id=data['id']).first()
+        except:
+            return {'message': 'Token is invalid'}, 401
+
+            
+        return f(*args, **kwargs)
+
+    return decorated
 
 def logged_in(current_user):
     return current_user.is_authenticated

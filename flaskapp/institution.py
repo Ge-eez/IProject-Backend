@@ -10,7 +10,6 @@ from flaskapp.models import *
 
 class InstitutionAPI(Resource):
         
-    @token_required_student
     def get(self, id=None):
         message = ""
         if(id):

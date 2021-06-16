@@ -10,19 +10,19 @@ from flaskapp.models import *
 
 class ProjectAPI(Resource):
         
+    @token_required
     def get(self, id=None):
         message = ""
-        if(logged_in(current_user)):
-            if(id):
-                if(is_company(current_user)):
-                    project = Project.query.filter_by(id=id, company_id=current_user.id)
-                else:
-                    project = Project.query.filter_by(id=id)
-                if(project):
-                    return pagination.paginate(project, project_fields)
-                else:
-                    message = "Project not found"
+        if(id):
+            if(is_company(current_user)):
+                project = Project.query.filter_by(id=id, company_id=current_user.id)
             else:
+                project = Project.query.filter_by(id=id)
+            if(project):
+                return pagination.paginate(project, project_fields)
+            else:
+                message = "Project not found"
+        else:
                 if(is_company(current_user)):
                     projects = Project.query.filter_by(company_id=current_user.id)
                 else:
@@ -32,8 +32,7 @@ class ProjectAPI(Resource):
                 else:
                     message = "Projects not available"
 
-        else:
-            message = "Access Denied"
+       
         
         return abort(400, {'message': message})
 
