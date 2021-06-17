@@ -23,10 +23,7 @@ class ProjectAPI(Resource):
             else:
                 message = "Project not found"
         else:
-                if(is_company(current_user)):
-                    projects = Project.query.filter_by(company_id=current_user.id)
-                else:
-                    projects = Project.query.all()
+                projects = Project.query.all()
                 if(projects):
                     return pagination.paginate(projects, project_fields)
                 else:
