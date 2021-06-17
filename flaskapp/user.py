@@ -30,7 +30,7 @@ class UserAPI(Resource):
 
     def delete(self, id):
         message = ""
-        if(is_admin(session)):
+        if(is_admin(request)):
             try:
                 acc = Account.query.filter_by(id=id)
                 account = acc.first()
@@ -59,7 +59,7 @@ class UserVerificationAPI(Resource):
         
     def put(self, id):
         message = ""
-        if(is_admin(session)):
+        if(is_admin(request)):
             try:
                 account = Account.query.filter_by(id=id).first()
                 if(account):

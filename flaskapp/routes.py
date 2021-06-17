@@ -126,15 +126,27 @@ def logged_in(current_user):
     return current_user.is_authenticated
 def logged_out(current_user):
     return not(current_user.is_authenticated)
+def is_role(request, role):
+    token = None
+    if 'X-Access-Token' in request.headers:
+        token = request.headers['X-Access-Token']
+    if not token:
+        return {'message': 'Token is missing'}, 403
 
-def is_admin(session):
-    return (session['account_type'] == 'admin')
-def is_student(session):
-    return (session['account_type'] == 'student')
-def is_teacher(session):
-    return (session['account_type'] == 'teacher')
-def is_company(session):
-    return (session['account_type'] == 'company')
+    try:
+        data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        return data['role'] == role
+    except:
+        return 0
+
+def is_admin(request):
+    is_role(request, 'admin')
+def is_student(request):
+    is_role(request, 'student')
+def is_teacher(request):
+   is_role(request, 'teacher')
+def is_company(request):
+    is_role(request, 'company')
 
 def get_current_user(request):
     token = None

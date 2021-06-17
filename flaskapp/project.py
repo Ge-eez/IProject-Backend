@@ -14,7 +14,7 @@ class ProjectAPI(Resource):
     def get(self, id=None):
         message = ""
         if(id):
-            if(is_company(session)):
+            if(is_company(request)):
                 project = Project.query.filter_by(id=id, company_id=get_current_user(request)['id'])
             else:
                 project = Project.query.filter_by(id=id)
@@ -23,10 +23,12 @@ class ProjectAPI(Resource):
             else:
                 message = "Project not found"
         else:
-            if(is_company(session)):
+            if(is_company(request)):
                 projects = Project.query.filter_by(company_id=get_current_user(request)['id'])
             else:
                 projects = Project.query.all()
+
+            print(projects)
 
             if(projects):
                 return pagination.paginate(projects, project_fields)
@@ -40,9 +42,9 @@ class ProjectAPI(Resource):
 
     def put(self, id):
         message = ""
-        if(is_company(session) or is_admin(session)):
+        if(is_company(request) or is_admin(request)):
             try:
-                if(is_company(session)):
+                if(is_company(request)):
                     project = Project.query.filter_by(id=id, company_id=get_current_user(request)['id'])
                 else:
                     project = Project.query.filter_by(id=id)
@@ -63,7 +65,7 @@ class ProjectAPI(Resource):
 
     def post(self):
         message = ""
-        if(is_company(session)):
+        if(is_company(request)):
             data = request.form
             if(data and data.get('title')  
                 and data.get('description')  
@@ -94,9 +96,9 @@ class ProjectAPI(Resource):
 
     def delete(self, id):
         message = ""
-        if(is_company(session) or is_admin(session)):
+        if(is_company(request) or is_admin(request)):
             try:
-                if(is_company(session)):
+                if(is_company(request)):
                     project = Project.query.filter_by(id=id, company_id=get_current_user(request)['id'])
                 else:
                     project = Project.query.filter_by(id=id)

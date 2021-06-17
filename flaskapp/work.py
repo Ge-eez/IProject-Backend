@@ -14,11 +14,11 @@ class WorkAPI(Resource):
     def get(self, id=None):
         message = ""
         if(id):
-            if(is_company(session)):
+            if(is_company(request)):
                 work = Work.query.filter_by(id=id, company_id=get_current_user(request)['id'])
-            elif(is_student(session)):
+            elif(is_student(request)):
                 work = Work.query.filter_by(id=id, student_id=get_current_user(request)['id'])
-            elif(is_teacher(session)):
+            elif(is_teacher(request)):
                 work = Work.query.filter_by(id=id, teachers_id=get_current_user(request)['id'])
             else:
                 work = Work.query.filter_by(id=id)
@@ -27,11 +27,11 @@ class WorkAPI(Resource):
             else:
                 message = "Work not found"
         else:
-                if(is_company(session)):
+                if(is_company(request)):
                     works = Work.query.join(Project, Work.projects_id==Project.id).filter(Project.company_id==get_current_user(request)['id'])
-                elif(is_student(session)):
+                elif(is_student(request)):
                     works = Work.query.filter_by(student_id=get_current_user(request)['id'])
-                elif(is_teacher(session)):
+                elif(is_teacher(request)):
                     works = Work.query.filter_by(teachers_id=get_current_user(request)['id'])
                 else:
                     works = Work.query.all()
@@ -46,9 +46,9 @@ class WorkAPI(Resource):
 
     def put(self, id):
         message = ""
-        if(is_company(session) or is_admin(session)):
+        if(is_company(request) or is_admin(request)):
             try:
-                if(is_company(session)):
+                if(is_company(request)):
                     project = Project.query.filter_by(id=id, company_id=get_current_user(request)['id'])
                 else:
                     project = Project.query.filter_by(id=id)
@@ -69,7 +69,7 @@ class WorkAPI(Resource):
 
     def post(self):
         message = ""
-        if(is_student(session)):
+        if(is_student(request)):
             data = request.form
             if(data and data.get('projects_id')  
                 and data.get('teachers_id')  
@@ -100,9 +100,9 @@ class WorkAPI(Resource):
 
     def delete(self, id):
         message = ""
-        if(is_company(session) or is_admin(session)):
+        if(is_company(request) or is_admin(request)):
             try:
-                if(is_company(session)):
+                if(is_company(request)):
                     project = Project.query.filter_by(id=id, company_id=get_current_user(request)['id'])
                 else:
                     project = Project.query.filter_by(id=id)
@@ -124,7 +124,7 @@ class FinishWorkAPI(Resource):
     
     def put(self, id):
         message = ""
-        if(is_student(session)):
+        if(is_student(request)):
             try:
                 work = Work.query.filter_by(id=id, student_id=get_current_user(request)['id']).first()
                 if(work):

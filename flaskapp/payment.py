@@ -17,13 +17,13 @@ class PaymentAPI(Resource):
             pay = Payment.query.filter_by(id=id)
             payment = rate.first()
             if(payment):
-                if(is_student(session) and not(payment.pays.student_id == get_current_user(request)['id'])):
+                if(is_student(request) and not(payment.pays.student_id == get_current_user(request)['id'])):
                     return abort(400, {'message': "Access denied"}) 
                 return pagination.paginate(pay, payment_fields)
             else:
                 message = "Payment not found"
         else:
-                if(is_student(session)):
+                if(is_student(request)):
                     payments = Payment.query.join(Work, Work.student_id == get_current_user(request)['id'])
                 else:
                     payments = Rating.query.all()
@@ -37,7 +37,7 @@ class PaymentAPI(Resource):
 
     def post(self):
         message = ""
-        if(is_company(session)):
+        if(is_company(request)):
             data = request.form
             if(data and data.get('work_id')  
                 and data.get('price')):

@@ -17,15 +17,15 @@ class RateAPI(Resource):
             rate = Rating.query.filter_by(id=id)
             rating = rate.first()
             if(rating):
-                if(is_student(session) and not(rating.rates.student_id == get_current_user(request)['id'])) or (is_teacher(session) and not(rating.rates.teachers_id == get_current_user(request)['id'])):
+                if(is_student(request) and not(rating.rates.student_id == get_current_user(request)['id'])) or (is_teacher(request) and not(rating.rates.teachers_id == get_current_user(request)['id'])):
                     return abort(400, {'message': "Access denied"}) 
                 return pagination.paginate(rate, rating_fields)
             else:
                 message = "Rating not found"
         else:
-                if(is_student(session)):
+                if(is_student(request)):
                     ratings = Rating.query.join(Work, Work.student_id == get_current_user(request)['id'])
-                elif(is_teacher(session)):
+                elif(is_teacher(request)):
                     ratings = Rating.query.join(Work, Work.teachers_id == get_current_user(request)['id'])
                 else:
                     ratings = Rating.query.all()
@@ -39,7 +39,7 @@ class RateAPI(Resource):
 
     def post(self):
         message = ""
-        if(is_teacher(session) or is_company(session)):
+        if(is_teacher(request) or is_company(request)):
             data = request.form
             if(data and data.get('work_id')  
                 and data.get('review')):
@@ -47,7 +47,7 @@ class RateAPI(Resource):
                 try:
                     rating = Rating.query.filter_by(work_id=data['work_id']).first()
                     work = Work.query.filter_by(id=data['work_id']).first()
-                    if(rating  and is_company(session)):
+                    if(rating  and is_company(request)):
                         if(work.done.company_id == get_current_user(request)['id']):
                             if(rating.company_review):
                                 message = "Already reviewed"
@@ -57,7 +57,7 @@ class RateAPI(Resource):
                                 return "Reviewed successfully" 
                         else:
                             return abort(400, {'message': "Access denied"})     
-                    elif(rating and is_teacher(session) ):
+                    elif(rating and is_teacher(request) ):
                         if(work.teachers_id == get_current_user(request)['id']):
                             if(rating.teacher_review):
                                 message = "Already reviewed"
@@ -67,7 +67,7 @@ class RateAPI(Resource):
                                 return "Reviewed successfully" 
                         else:
                             return abort(400, {'message': "Access denied"})     
-                    elif(is_company(session)):
+                    elif(is_company(request)):
                         if(work.done.company_id == get_current_user(request)['id']):
                             new_rating = Rating(work_id=data['work_id'], 
                                 company_review=data['review']) 
@@ -76,7 +76,7 @@ class RateAPI(Resource):
                             return "Reviewed successfully" 
                         else:
                             return abort(400, {'message': "Access denied"})  
-                    elif(is_teacher(session)):
+                    elif(is_teacher(request)):
                         if(work.teachers_id == get_current_user(request)['id']):
                             new_rating = Rating(work_id=data['work_id'], 
                                 teacher_review=data['review']) 
