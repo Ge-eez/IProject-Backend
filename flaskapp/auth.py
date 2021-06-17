@@ -147,7 +147,10 @@ def login():
                 login_user(active, remember=True)
                 result['message'] = "Logged in"
                 result['user_id'] = current_user.id
-                result["token"] = jwt.encode({'id' : user.id, 'role': user.role, 'exp' : datetime.utcnow() + timedelta(minutes=30)}, app.config['SECRET_KEY'], algorithm="HS256").decode("utf-8") 
+
+                
+
+                result["token"] = jwt.encode({'id' : user.id, 'user': active.as_dict(), 'role': user.role, 'exp' : datetime.utcnow() + timedelta(minutes=30)}, app.config['SECRET_KEY'], algorithm="HS256").decode("utf-8") 
                 
             else:
                 return abort(404, {'message': "Invalid login"})

@@ -14,8 +14,8 @@ class ProjectAPI(Resource):
     def get(self, id=None):
         message = ""
         if(id):
-            if(is_company(current_user)):
-                project = Project.query.filter_by(id=id, company_id=current_user.id)
+            if(is_company(session)):
+                project = Project.query.filter_by(id=id, company_id=get_current_user(request)['id'])
             else:
                 project = Project.query.filter_by(id=id)
             if(project):
@@ -23,11 +23,15 @@ class ProjectAPI(Resource):
             else:
                 message = "Project not found"
         else:
+            if(is_company(session)):
+                projects = Project.query.filter_by(company_id=get_current_user(request)['id'])
+            else:
                 projects = Project.query.all()
-                if(projects):
-                    return pagination.paginate(projects, project_fields)
-                else:
-                    message = "Projects not available"
+
+            if(projects):
+                return pagination.paginate(projects, project_fields)
+            else:
+                message = "Projects not available"
 
        
         
@@ -36,10 +40,10 @@ class ProjectAPI(Resource):
 
     def put(self, id):
         message = ""
-        if(is_company(current_user) or is_admin(current_user)):
+        if(is_company(session) or is_admin(session)):
             try:
-                if(is_company(current_user)):
-                    project = Project.query.filter_by(id=id, company_id=current_user.id)
+                if(is_company(session)):
+                    project = Project.query.filter_by(id=id, company_id=get_current_user(request)['id'])
                 else:
                     project = Project.query.filter_by(id=id)
                 if(project):
@@ -59,7 +63,7 @@ class ProjectAPI(Resource):
 
     def post(self):
         message = ""
-        if(is_company(current_user)):
+        if(is_company(session)):
             data = request.form
             if(data and data.get('title')  
                 and data.get('description')  
@@ -74,7 +78,7 @@ class ProjectAPI(Resource):
                         price=data['price'], 
                         deadline=data['deadline'],
                         technologies=technologies,
-                        company_id=current_user.id) 
+                        company_id=get_current_user(request)['id']) 
                     db.session.add(new_project)  
                     db.session.commit()  
                     return "Project created"
@@ -90,10 +94,10 @@ class ProjectAPI(Resource):
 
     def delete(self, id):
         message = ""
-        if(is_company(current_user) or is_admin(current_user)):
+        if(is_company(session) or is_admin(session)):
             try:
-                if(is_company(current_user)):
-                    project = Project.query.filter_by(id=id, company_id=current_user.id)
+                if(is_company(session)):
+                    project = Project.query.filter_by(id=id, company_id=get_current_user(request)['id'])
                 else:
                     project = Project.query.filter_by(id=id)
                 if(project):

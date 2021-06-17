@@ -17,16 +17,16 @@ class RateAPI(Resource):
             rate = Rating.query.filter_by(id=id)
             rating = rate.first()
             if(rating):
-                if(is_student(current_user) and not(rating.rates.student_id == current_user.id)) or (is_teacher(current_user) and not(rating.rates.teachers_id == current_user.id)):
+                if(is_student(session) and not(rating.rates.student_id == get_current_user(request)['id'])) or (is_teacher(session) and not(rating.rates.teachers_id == get_current_user(request)['id'])):
                     return abort(400, {'message': "Access denied"}) 
                 return pagination.paginate(rate, rating_fields)
             else:
                 message = "Rating not found"
         else:
-                if(is_student(current_user)):
-                    ratings = Rating.query.join(Work, Work.student_id == current_user.id)
-                elif(is_teacher(current_user)):
-                    ratings = Rating.query.join(Work, Work.teachers_id == current_user.id)
+                if(is_student(session)):
+                    ratings = Rating.query.join(Work, Work.student_id == get_current_user(request)['id'])
+                elif(is_teacher(session)):
+                    ratings = Rating.query.join(Work, Work.teachers_id == get_current_user(request)['id'])
                 else:
                     ratings = Rating.query.all()
                 if(ratings):
@@ -39,7 +39,7 @@ class RateAPI(Resource):
 
     def post(self):
         message = ""
-        if(is_teacher(current_user) or is_company(current_user)):
+        if(is_teacher(session) or is_company(session)):
             data = request.form
             if(data and data.get('work_id')  
                 and data.get('review')):
@@ -47,8 +47,8 @@ class RateAPI(Resource):
                 try:
                     rating = Rating.query.filter_by(work_id=data['work_id']).first()
                     work = Work.query.filter_by(id=data['work_id']).first()
-                    if(rating  and is_company(current_user)):
-                        if(work.done.company_id == current_user.id):
+                    if(rating  and is_company(session)):
+                        if(work.done.company_id == get_current_user(request)['id']):
                             if(rating.company_review):
                                 message = "Already reviewed"
                             else:
@@ -57,8 +57,8 @@ class RateAPI(Resource):
                                 return "Reviewed successfully" 
                         else:
                             return abort(400, {'message': "Access denied"})     
-                    elif(rating and is_teacher(current_user) ):
-                        if(work.teachers_id == current_user.id):
+                    elif(rating and is_teacher(session) ):
+                        if(work.teachers_id == get_current_user(request)['id']):
                             if(rating.teacher_review):
                                 message = "Already reviewed"
                             else:
@@ -67,8 +67,8 @@ class RateAPI(Resource):
                                 return "Reviewed successfully" 
                         else:
                             return abort(400, {'message': "Access denied"})     
-                    elif(is_company(current_user)):
-                        if(work.done.company_id == current_user.id):
+                    elif(is_company(session)):
+                        if(work.done.company_id == get_current_user(request)['id']):
                             new_rating = Rating(work_id=data['work_id'], 
                                 company_review=data['review']) 
                             db.session.add(new_rating) 
@@ -76,8 +76,8 @@ class RateAPI(Resource):
                             return "Reviewed successfully" 
                         else:
                             return abort(400, {'message': "Access denied"})  
-                    elif(is_teacher(current_user)):
-                        if(work.teachers_id == current_user.id):
+                    elif(is_teacher(session)):
+                        if(work.teachers_id == get_current_user(request)['id']):
                             new_rating = Rating(work_id=data['work_id'], 
                                 teacher_review=data['review']) 
                             db.session.add(new_rating) 
